@@ -62,6 +62,9 @@ export const ClosingSection: React.FC<ClosingSectionProps> = ({ wedding }) => {
             <Heart className="w-3 h-3 text-[#B89B63] fill-[#B89B63]" />
             <span>for their special day</span>
           </div>
+          <p className="text-[11px] text-[#70635C] font-sans">
+            Created By Muhammad Fachry Anshor
+          </p>
         </div>
       </ScrollReveal>
     </footer>
