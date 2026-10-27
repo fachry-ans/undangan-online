@@ -519,7 +519,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   type="text"
                   value={previewGuestInput}
                   onChange={(e) => setPreviewGuestInput(e.target.value)}
-                  placeholder="Contoh: Abdi Indodana"
+                  placeholder="Contoh: Nama tamu undangan"
                   className="flex-1 px-4 py-2.5 rounded-xl border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#B08A5B]"
                 />
                 <button

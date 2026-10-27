@@ -19,7 +19,6 @@ import { MusicPlayer } from './components/wedding/MusicPlayer';
 
 // Admin Console
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { Shield } from 'lucide-react';
 
 export default function App() {
   const [wedding, setWedding] = useState<WeddingData>(() => WeddingService.getWedding('abdi-lula'));
@@ -34,12 +33,6 @@ export default function App() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const toParam = urlParams.get('to');
-    const viewParam = urlParams.get('view');
-    const path = window.location.pathname;
-
-    if (viewParam === 'admin' || path.startsWith('/admin')) {
-      setIsAdminView(true);
-    }
 
     if (toParam) {
       const decoded = decodeURIComponent(toParam.replace(/\+/g, ' ')).trim();
@@ -150,7 +143,10 @@ export default function App() {
         />
 
         {/* 12. Footer & Closing Blessing (Gunungan Wayang Jawa & Leafitation credits) */}
-        <ClosingSection wedding={wedding} />
+        <ClosingSection
+          wedding={wedding}
+          onAdminAccess={() => setIsAdminView(true)}
+        />
 
         {/* 13. Floating Music Player (Kusuma Wijaya track & 4s spin animation) */}
         {isCoverOpen && wedding.music.enabled && (
@@ -160,17 +156,6 @@ export default function App() {
           />
         )}
 
-        {/* Discreet Floating Admin Navigation Button */}
-        <div className="fixed bottom-5 left-5 z-40">
-          <button
-            onClick={() => setIsAdminView(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-900/80 hover:bg-stone-900 text-stone-200 text-xs font-mono backdrop-blur-md border border-stone-700 shadow-lg transition-all hover:scale-105 cursor-pointer"
-            title="Buka Admin Dashboard untuk mengelola data & tamu"
-          >
-            <Shield className="w-3.5 h-3.5 text-[#C6A87A]" />
-            <span>Admin</span>
-          </button>
-        </div>
       </div>
     </div>
   );

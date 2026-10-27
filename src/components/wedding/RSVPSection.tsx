@@ -91,7 +91,7 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Contoh: Abdi Indodana"
+                  placeholder="Contoh: Nama lengkap Anda"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8D8BD] text-xs text-[#3A302B] bg-[#FAF7F0]/60 focus:outline-hidden focus:border-[#B89B63] focus:bg-white font-sans transition-all"
                 />
               </div>
