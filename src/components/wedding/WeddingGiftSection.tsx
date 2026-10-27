@@ -50,7 +50,7 @@ export const WeddingGiftSection: React.FC<WeddingGiftSectionProps> = ({ wedding 
             Tanda Kasih
           </div>
           <h2 className="text-[36px] sm:text-[42px] text-[#3A302B] font-serif font-normal leading-tight mt-1">
-            Wedding Gift
+            Amplop Digital &amp; Hadiah
           </h2>
         </ScrollReveal>
 

@@ -16,7 +16,7 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ wedding }) => {
       <div className="space-y-3">
         <ScrollReveal animation="fade-down" delay={100} duration={1200}>
           <div className="inline-block px-3 py-1 rounded-full bg-[#E8D8BD]/40 text-[#B89B63] text-[11px] font-sans uppercase tracking-[3px] font-semibold mb-1">
-            Mempelai
+            Kedua Mempelai
           </div>
           <h2 className="text-[36px] sm:text-[42px] text-[#3A302B] font-serif font-normal leading-[1.05]">
             Mempelai Pria &amp; Wanita
