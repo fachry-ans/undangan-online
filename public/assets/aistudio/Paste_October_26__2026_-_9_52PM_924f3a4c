@@ -1,0 +1,2073 @@
+# FULL-STACK WEDDING INVITATION WEBSITE
+## HIGH-FIDELITY RECREATION OF REFERENCE DESIGN & ANIMATIONS
+
+You are a senior full-stack engineer, UI/UX designer, motion designer, and frontend architect.
+
+Build a production-ready, fully responsive wedding invitation platform inspired by this reference:
+
+REFERENCE:
+https://invi.leafitation.com/rara-benno/?to=Abdi+Indodana
+
+IMPORTANT:
+The result must feel extremely close to the reference in terms of:
+- visual hierarchy
+- composition
+- spacing
+- typography
+- section order
+- proportions
+- ornament placement
+- image treatment
+- animation timing
+- scroll behavior
+- reveal effects
+- transitions
+- buttons
+- interactive states
+- mobile experience
+- guest personalization
+- overall cinematic feeling
+
+Do NOT make a generic wedding template.
+
+Treat the reference as the primary visual and interaction benchmark.
+
+Do not copy copyrighted text, logos, proprietary branding, or third-party assets without authorization. Recreate the design language, layout, animation system, and interaction behavior using original/replaceable assets.
+
+---
+
+# 1. CORE PRODUCT
+
+Create a complete SaaS-style digital wedding invitation system.
+
+The application must support:
+
+1. Public wedding invitation pages
+2. Unique wedding invitation slug
+3. Guest personalization through URL query parameter
+4. Responsive mobile-first design
+5. Admin dashboard
+6. Wedding data management
+7. Event management
+8. Love story timeline
+9. Photo gallery
+10. RSVP
+11. Wedding wishes / guestbook
+12. Wedding gift / bank information
+13. Background music
+14. Google Maps integration
+15. Countdown timer
+16. Guest management
+17. Invitation statistics
+18. SEO metadata
+19. Social sharing preview
+20. Image upload/storage
+21. Multiple wedding invitations from one application
+
+Example URL:
+
+/invite/rara-benno?to=Abdi+Indodana
+
+The guest name must automatically appear in the invitation.
+
+---
+
+# 2. RECOMMENDED TECH STACK
+
+Use:
+
+Frontend:
+- Next.js latest stable
+- React
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Lucide Icons
+
+Backend:
+- Next.js server actions / API routes
+- Supabase PostgreSQL
+- Supabase Storage
+- Supabase Auth
+
+Forms:
+- React Hook Form
+- Zod validation
+
+Deployment:
+- Vercel
+
+Database:
+- PostgreSQL through Supabase
+
+Use clean modular architecture.
+
+Do NOT build everything as one huge component.
+
+---
+
+# 3. DESIGN DIRECTION
+
+The visual direction must feel:
+
+- elegant
+- romantic
+- premium
+- cinematic
+- sophisticated
+- warm
+- intimate
+- editorial
+- botanical
+- slightly vintage
+- high-end wedding invitation
+
+Use a sophisticated neutral palette.
+
+Suggested initial palette:
+
+Background:
+#F8F4EE
+#EFE7DC
+#E7D9C8
+
+Text:
+#3E3027
+#5A4638
+#756254
+
+Accent:
+#9C7650
+#B08A5B
+#C6A87A
+
+White:
+#FFFFFF
+
+Dark:
+#241C18
+
+However, create the theme system so colors can be changed from the admin dashboard.
+
+Do NOT hard-code the colors throughout the UI.
+
+Use CSS variables / theme tokens.
+
+---
+
+# 4. TYPOGRAPHY
+
+Typography must create the same editorial wedding feeling.
+
+Use:
+
+- elegant serif display font for couple names and major titles
+- refined serif/sans-serif combination for body text
+- script/calligraphy font only for decorative accents where appropriate
+
+Recommended font families can include:
+- Cormorant Garamond
+- Playfair Display
+- Cinzel
+- DM Sans
+- Inter
+- Great Vibes
+- Allura
+
+Do NOT overuse script fonts.
+
+The couple names should feel luxurious and highly prominent.
+
+Create responsive typography using clamp().
+
+Example:
+
+Couple names:
+clamp(3rem, 9vw, 8rem)
+
+Section titles:
+clamp(2rem, 5vw, 4rem)
+
+Body:
+clamp(0.9rem, 1.4vw, 1.1rem)
+
+---
+
+# 5. GLOBAL EXPERIENCE
+
+The entire website should feel like a cinematic story instead of a standard website.
+
+Important:
+
+When the invitation loads:
+
+- prevent scrolling initially
+- display a full-screen cover
+- show wedding title
+- show couple names
+- show event date
+- show guest name
+- show "Buka Undangan" button
+
+When the user clicks:
+
+"Buka Undangan"
+
+perform:
+
+1. cover begins exit animation
+2. background music starts
+3. page scroll becomes enabled
+4. content fades in
+5. decorative elements animate
+6. first section becomes visible
+7. floating music control appears
+8. URL remains intact
+
+Do not autoplay audio before user interaction.
+
+Respect browser autoplay restrictions.
+
+---
+
+# 6. COVER / OPENING SCREEN
+
+Create a full viewport opening screen.
+
+Desktop:
+- 100vh
+- centered composition
+- elegant decorative botanical elements
+- large couple names
+- wedding date
+- subtle texture
+- background image/hero photo option
+- ornamental elements positioned around content
+
+Mobile:
+- 100svh
+- optimized for narrow screens
+- no clipping
+- no horizontal overflow
+
+Display:
+
+"The Wedding Of"
+
+COUPLE NAMES
+
+DATE
+
+"Kepada Yth."
+
+GUEST NAME
+
+"Buka Undangan"
+
+The guest name comes from:
+
+?to=Abdi+Indodana
+
+Decode URL parameters correctly.
+
+Examples:
+
+?to=Abdi+Indodana
+?to=Bapak+Andi+dan+Keluarga
+?to=Sarah
+
+Display:
+
+Abdi Indodana
+
+not:
+
+Abdi+Indodana
+
+If no guest parameter exists:
+
+"Tamu Undangan"
+
+---
+
+# 7. COVER ANIMATION
+
+Use polished motion similar to premium digital wedding invitations.
+
+Animation sequence:
+
+0ms:
+background appears
+
+200ms:
+ornaments fade in
+
+400ms:
+title fades upward
+
+600ms:
+couple names fade + slight scale
+
+800ms:
+date appears
+
+1000ms:
+guest name appears
+
+1200ms:
+button appears
+
+Decorative animation:
+- subtle floating
+- slow opacity breathing
+- very slight parallax
+- botanical elements drifting
+- no excessive bouncing
+
+Button animation:
+- subtle shimmer
+- hover lift
+- soft shadow
+- press scale
+
+On "Buka Undangan":
+
+Cover:
+- scale slightly
+- opacity decreases
+- translateY(-20px)
+- decorative elements move outward
+- content behind it becomes visible
+
+Use Framer Motion.
+
+The animation must feel expensive, not like a generic template.
+
+---
+
+# 8. MAIN HERO
+
+After opening:
+
+Create the first major section.
+
+Content:
+
+THE WEDDING OF
+
+COUPLE NAMES
+
+DATE
+
+Optional:
+
+WE FOUND LOVE
+
+Quote / Quran verse / wedding quote
+
+Use the same visual hierarchy as the reference.
+
+The hero must have:
+
+- large negative space
+- centered typography
+- decorative ornaments
+- floral frame
+- layered background
+- subtle floating animation
+
+---
+
+# 9. QUOTE / OPENING MESSAGE
+
+Create a dedicated quote section.
+
+Example structure:
+
+WE FOUND LOVE
+
+"Wedding quote goes here."
+
+Source:
+(Q.S. Ar-Rum 30:21)
+
+Admin must be able to change:
+- heading
+- quote
+- source
+- alignment
+- ornament
+- background
+
+---
+
+# 10. BRIDE & GROOM SECTION
+
+Create an elegant couple introduction section.
+
+Desktop:
+two-column layout
+
+Bride:
+- photo
+- name
+- full name
+- parents
+- Instagram button
+
+Groom:
+- photo
+- name
+- full name
+- parents
+- Instagram button
+
+Mobile:
+single-column vertical layout.
+
+Use decorative center "&".
+
+Example:
+
+GROOM
+FULL NAME
+Putra Pertama dari
+Father & Mother
+
+&
+
+BRIDE
+FULL NAME
+Putri Pertama dari
+Father & Mother
+
+Photo treatment:
+- editorial crop
+- rounded or architectural framing based on theme
+- subtle shadow
+- optional floral decoration
+
+Animation:
+- left photo enters from left
+- right photo enters from right
+- text fades in
+- center "&" scales in
+
+Trigger animation on scroll.
+
+---
+
+# 11. COUNTDOWN SECTION
+
+Create:
+
+SAVE THE DATE
+
+DAY
+MONTH
+YEAR
+
+Then:
+
+Days
+Hours
+Minutes
+Seconds
+
+Countdown must update every second.
+
+Use event date/time from database.
+
+Handle:
+- timezone
+- expired countdown
+- different local time
+- invalid date
+
+When countdown reaches zero:
+
+display:
+
+"THE DAY HAS ARRIVED"
+
+instead of negative values.
+
+Animation:
+- numbers transition smoothly
+- subtle fade/flip
+- no aggressive animation
+
+---
+
+# 12. WEDDING EVENT
+
+Create the event section.
+
+Heading:
+
+Wedding Event
+
+Subheading / description
+
+Cards:
+
+AKAD NIKAH
+
+Date
+Time
+Venue
+Full Address
+
+OPEN MAPS
+
+RESEPSI
+
+Date
+Time
+Venue
+Full Address
+
+OPEN MAPS
+
+Each event supports:
+
+- event type
+- event date
+- start time
+- end time
+- venue
+- address
+- Google Maps URL
+- optional image
+
+The Maps button must open in a new tab.
+
+On mobile, cards stack vertically.
+
+Animation:
+- cards fade upward
+- slight blur-to-sharp transition
+- images reveal smoothly
+
+---
+
+# 13. LOVE STORY
+
+Create a cinematic storytelling section.
+
+Heading:
+
+Love Story
+
+Subtitle:
+
+Every love story is beautiful,
+but ours is my favorite.
+
+Timeline examples:
+
+First Meet
+
+Relationship
+
+Engagement
+
+Our Moment
+
+Each timeline item supports:
+
+- title
+- date
+- description
+- photo
+- optional icon
+
+Desktop:
+horizontal / alternating timeline.
+
+Mobile:
+vertical timeline.
+
+Animation:
+- timeline line draws progressively
+- dots appear sequentially
+- text reveals
+- image slides/fades in
+- active item gets slight emphasis
+
+Do NOT animate everything simultaneously.
+
+Use IntersectionObserver / Framer Motion viewport triggers.
+
+---
+
+# 14. GALLERY / OUR MOMENTS
+
+Create a premium photo gallery.
+
+Heading:
+
+Our Gallery
+
+or:
+
+Our Moment
+
+Description:
+
+"A moment is better when shared with you."
+
+Support:
+- multiple photos
+- portrait
+- landscape
+- square
+- video
+- optional YouTube video
+- optional Instagram reel
+
+Gallery layout should feel editorial.
+
+Possible layouts:
+- masonry
+- asymmetric grid
+- featured photo
+- smaller supporting photos
+
+Images must support:
+- lazy loading
+- responsive sizes
+- optimized WebP/AVIF
+- lightbox
+- swipe gestures on mobile
+
+Lightbox:
+- fullscreen
+- dark overlay
+- zoom
+- next/previous
+- swipe
+- close button
+- keyboard navigation
+
+Opening gallery image:
+- scale from 0.95 to 1
+- opacity fade
+
+---
+
+# 15. WEDDING GIFT
+
+Create:
+
+Wedding Gift
+
+Description:
+
+Doa restu Anda merupakan karunia yang sangat berarti bagi kami.
+
+Then:
+
+"Dan jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara cashless."
+
+Cards for:
+
+BCA
+Mandiri
+BRI
+BNI
+BSI
+etc.
+
+Each bank account:
+
+BANK NAME
+
+ACCOUNT NUMBER
+
+a.n.
+ACCOUNT HOLDER
+
+SALIN NOMOR
+
+Copy button must:
+- copy number
+- show success state
+- show "Tersalin"
+- automatically return to normal after timeout
+
+Also support:
+
+Kirim Kado
+
+Physical gift address.
+
+Optional:
+
+QRIS image.
+
+---
+
+# 16. RSVP
+
+Create:
+
+RSVP
+
+Konfirmasi kehadiran Anda dengan mengisi form berikut.
+
+Fields:
+
+Nama
+Jumlah Kehadiran
+Konfirmasi Kehadiran
+Alamat Domisili
+
+Attendance options:
+
+Hadir
+Tidak Hadir
+Masih Ragu
+
+Validate:
+- name required
+- minimum 2 characters
+- maximum reasonable length
+- attendance required
+- guest count numeric
+- prevent duplicate spam submission
+
+Show:
+- loading state
+- success state
+- error state
+
+Success message should be elegant and animated.
+
+Store RSVP in Supabase.
+
+---
+
+# 17. GUESTBOOK / BEST WISHES
+
+Create:
+
+Best Wishes
+
+"Sampaikan doa dan ucapan terbaik Anda"
+
+Show statistics:
+
+X Hadir
+X Tidak Hadir
+X Masih Ragu
+
+Then comments.
+
+Each comment:
+
+Guest Name
+Attendance badge
+Message
+Date
+
+Newest first.
+
+Support pagination / infinite scroll.
+
+Provide:
+- loading skeleton
+- empty state
+- error state
+
+New comments should appear without full page refresh.
+
+Use Supabase Realtime where appropriate.
+
+---
+
+# 18. MUSIC SYSTEM
+
+Implement background music.
+
+Music starts only after user clicks:
+
+"Buka Undangan"
+
+Floating player:
+
+- music icon
+- animated rotating disc / equalizer
+- play/pause
+- optional song title
+
+States:
+
+Playing
+Paused
+
+When paused:
+music icon stops animation.
+
+When playing:
+icon rotates / pulses gently.
+
+Persist state during navigation.
+
+Do not force music if browser blocks it.
+
+Admin must be able to:
+- upload music
+- select default track
+- enable/disable music
+- change title
+
+---
+
+# 19. SCROLL ANIMATIONS
+
+This is extremely important.
+
+Do NOT build a static page.
+
+Everything should progressively reveal while scrolling.
+
+Use:
+- fade up
+- fade down
+- fade left
+- fade right
+- scale
+- blur to sharp
+- stagger
+- clip reveal
+- parallax
+- image zoom
+- ornament movement
+- timeline drawing
+
+Typical section entrance:
+
+initial:
+opacity: 0
+transform: translateY(40px)
+filter: blur(8px)
+
+animate:
+opacity: 1
+transform: translateY(0)
+filter: blur(0)
+
+Duration:
+0.7s - 1.2s
+
+Easing:
+easeOut / cubic-bezier
+
+Use different animation variants so the website does not feel repetitive.
+
+Respect:
+
+prefers-reduced-motion
+
+When reduced-motion is enabled:
+- remove excessive movement
+- maintain basic fades only
+
+---
+
+# 20. DECORATIVE ELEMENTS
+
+Use ornamental assets throughout the invitation.
+
+Examples:
+- floral branches
+- wedding flowers
+- traditional ornaments
+- thin decorative separators
+- botanical illustrations
+- ornamental lines
+- abstract texture
+- gold details
+
+Elements should move subtly with scroll.
+
+Do not make ornaments overpower content.
+
+Decorations should sit behind content using proper z-index layers.
+
+Create reusable components:
+
+<FloralDecoration />
+<OrnamentDivider />
+<CornerDecoration />
+<BotanicalDecoration />
+<GoldParticleLayer />
+
+---
+
+# 21. BACKGROUND EFFECTS
+
+Create subtle visual depth.
+
+Possible effects:
+- paper texture
+- grain
+- soft noise
+- radial gradients
+- vignette
+- light particles
+- floral shadows
+- background image overlays
+
+Do NOT make the site look like a gaming website.
+
+Everything should remain elegant.
+
+---
+
+# 22. FOOTER / CLOSING
+
+Create final section.
+
+Text:
+
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan hadir dan memberikan doa restunya untuk pernikahan kami.
+
+Atas do’a & restunya,
+kami ucapkan terima kasih.
+
+COUPLE NAMES
+
+Add:
+- ornamental divider
+- floral decorations
+- final couple photo
+- subtle fade animation
+
+Bottom:
+
+Made with love
+
+Do not copy the reference company's branding.
+
+---
+
+# 23. FLOATING UI
+
+Create floating controls.
+
+Music control:
+bottom-right
+
+Optional:
+back-to-top button
+
+Controls must respect safe areas on mobile.
+
+Use:
+
+env(safe-area-inset-bottom)
+
+Avoid overlapping:
+- browser controls
+- RSVP buttons
+- gallery
+- bottom content
+
+---
+
+# 24. ADMIN DASHBOARD
+
+Create a complete admin dashboard.
+
+Authentication:
+Supabase Auth.
+
+Admin pages:
+
+/admin
+
+/admin/invitations
+
+/admin/invitations/[id]
+
+/admin/invitations/[id]/couple
+
+/admin/invitations/[id]/events
+
+/admin/invitations/[id]/story
+
+/admin/invitations/[id]/gallery
+
+/admin/invitations/[id]/gifts
+
+/admin/invitations/[id]/rsvp
+
+/admin/invitations/[id]/wishes
+
+/admin/invitations/[id]/guests
+
+/admin/invitations/[id]/settings
+
+---
+
+# 25. ADMIN WEDDING EDITOR
+
+Admin must be able to edit:
+
+General:
+- couple names
+- slug
+- wedding date
+- cover title
+- guest greeting
+
+Bride:
+- nickname
+- full name
+- parents
+- photo
+- Instagram
+
+Groom:
+- nickname
+- full name
+- parents
+- photo
+- Instagram
+
+Opening:
+- quote
+- quote source
+- heading
+- description
+
+Events:
+- akad
+- reception
+- date
+- time
+- venue
+- address
+- maps URL
+
+Love story:
+- timeline items
+- date
+- title
+- description
+- photo
+
+Gallery:
+- upload
+- reorder
+- delete
+- captions
+
+Wedding gift:
+- bank name
+- account number
+- holder name
+- QRIS
+- gift address
+
+Music:
+- audio file
+- title
+- autoplay-after-open behavior
+
+RSVP:
+- enable/disable
+- guest limit
+- attendance options
+
+Theme:
+- colors
+- fonts
+- background
+- ornaments
+- animation intensity
+
+---
+
+# 26. DRAG & DROP
+
+Admin gallery must support drag-and-drop.
+
+Allow:
+
+- reorder photos
+- upload multiple photos
+- delete
+- set featured image
+
+Persist ordering in database.
+
+---
+
+# 27. GUEST MANAGEMENT
+
+Admin can create guest entries.
+
+Fields:
+
+Name
+Slug / invitation
+Group
+Phone
+Relationship
+Maximum attendees
+Invitation status
+RSVP status
+
+The system can generate:
+
+https://yourdomain.com/invite/rara-benno?to=Abdi+Indodana
+
+Add:
+
+Copy Invitation Link
+
+and:
+
+WhatsApp
+
+button.
+
+WhatsApp message should contain the invitation URL.
+
+---
+
+# 28. PERSONALIZED INVITATION
+
+This feature is mandatory.
+
+Example:
+
+/invite/rara-benno?to=Abdi+Indodana
+
+Display:
+
+Kepada Yth.
+
+Abdi Indodana
+
+Support special characters:
+
+Bapak & Ibu
+Bpk. Andi & Keluarga
+Sdr. John
+Sarah & Partner
+
+Correctly URL-decode UTF-8 values.
+
+Prevent unsafe HTML injection.
+
+Render guest names as text only.
+
+---
+
+# 29. DATABASE SCHEMA
+
+Create proper relational tables.
+
+Suggested:
+
+profiles
+
+weddings
+
+couples
+
+events
+
+love_stories
+
+gallery_items
+
+bank_accounts
+
+gift_addresses
+
+guests
+
+rsvps
+
+wishes
+
+music_tracks
+
+theme_settings
+
+invitation_views
+
+analytics_events
+
+Example:
+
+weddings
+- id
+- slug
+- title
+- wedding_date
+- timezone
+- status
+- created_at
+- updated_at
+
+couples
+- id
+- wedding_id
+- bride_name
+- bride_full_name
+- bride_parents
+- bride_photo
+- groom_name
+- groom_full_name
+- groom_parents
+- groom_photo
+- created_at
+
+events
+- id
+- wedding_id
+- type
+- title
+- start_at
+- end_at
+- venue
+- address
+- maps_url
+- image_url
+- sort_order
+
+love_stories
+- id
+- wedding_id
+- title
+- story_date
+- description
+- image_url
+- sort_order
+
+gallery_items
+- id
+- wedding_id
+- media_type
+- media_url
+- thumbnail_url
+- caption
+- sort_order
+
+guests
+- id
+- wedding_id
+- name
+- phone
+- group_name
+- max_attendance
+- invitation_status
+
+rsvps
+- id
+- wedding_id
+- guest_id
+- name
+- attendance
+- guest_count
+- city
+- created_at
+
+wishes
+- id
+- wedding_id
+- guest_name
+- attendance
+- message
+- created_at
+
+bank_accounts
+- id
+- wedding_id
+- bank_name
+- account_number
+- account_holder
+- sort_order
+
+theme_settings
+- id
+- wedding_id
+- primary_color
+- secondary_color
+- background_color
+- text_color
+- heading_font
+- body_font
+- animation_style
+
+---
+
+# 30. SECURITY
+
+Must include:
+
+- Supabase Row Level Security
+- admin authorization
+- validation with Zod
+- rate limiting for RSVP
+- rate limiting for wishes
+- spam protection
+- XSS protection
+- input sanitization
+- safe image upload
+- file type validation
+- maximum upload size
+- server-side authorization checks
+
+Never trust client-side validation.
+
+---
+
+# 31. PERFORMANCE
+
+The invitation must load extremely fast.
+
+Implement:
+
+- responsive images
+- next/image
+- lazy loading
+- preload hero image
+- preload important fonts where appropriate
+- dynamic imports
+- code splitting
+- optimized animations
+- avoid layout shift
+- avoid huge JS bundles
+- avoid unnecessary React rerenders
+- compress images
+- use WebP/AVIF
+
+Target:
+
+Lighthouse mobile:
+90+
+
+Performance:
+90+
+
+Accessibility:
+90+
+
+Best Practices:
+90+
+
+SEO:
+90+
+
+---
+
+# 32. RESPONSIVE DESIGN
+
+Prioritize mobile first.
+
+Breakpoints:
+
+mobile:
+320px - 767px
+
+tablet:
+768px - 1023px
+
+desktop:
+1024px+
+
+large desktop:
+1440px+
+
+Test:
+
+320x568
+360x800
+390x844
+412x915
+768x1024
+1024x768
+1366x768
+1440x900
+1920x1080
+
+No horizontal scrolling.
+
+No clipped text.
+
+No oversized decorations covering content.
+
+---
+
+# 33. MOBILE EXPERIENCE
+
+The mobile version must NOT simply be a shrunk desktop version.
+
+Create intentional mobile layouts.
+
+Examples:
+
+desktop:
+two-column couple section
+
+mobile:
+single column
+
+desktop:
+timeline alternating
+
+mobile:
+vertical timeline
+
+desktop:
+gallery masonry
+
+mobile:
+swipe-friendly grid
+
+Make every touch target at least approximately 44px.
+
+---
+
+# 34. SEO
+
+Generate dynamic metadata per invitation.
+
+Title:
+
+Rara & Benno | Wedding Invitation
+
+Description:
+
+Wedding invitation for Rara & Benno
+
+Open Graph:
+- title
+- description
+- image
+- URL
+
+Twitter card.
+
+Canonical URL.
+
+Structured data:
+WeddingEvent where appropriate.
+
+---
+
+# 35. SOCIAL SHARING
+
+When shared:
+
+show the couple's photo as preview.
+
+Generate dynamic OpenGraph metadata.
+
+Example:
+
+Title:
+Rara & Benno
+
+Description:
+Wedding Invitation
+
+Image:
+hero / couple image
+
+---
+
+# 36. ANALYTICS
+
+Track:
+
+- invitation opened
+- invitation views
+- guest query parameter
+- RSVP submitted
+- wish submitted
+- gift section viewed
+- map clicked
+- music started
+- gallery opened
+
+Admin dashboard should show:
+
+Total Views
+Unique Guests
+RSVP Hadir
+RSVP Tidak Hadir
+RSVP Masih Ragu
+Total Wishes
+
+---
+
+# 37. VISUAL QA AGAINST REFERENCE
+
+This is mandatory.
+
+Do not stop after implementing the HTML.
+
+Compare the implementation against:
+
+https://invi.leafitation.com/rara-benno/?to=Abdi+Indodana
+
+Check:
+
+1. opening screen
+2. typography
+3. whitespace
+4. section proportions
+5. ornament positioning
+6. photo sizes
+7. card sizes
+8. button shapes
+9. section spacing
+10. animation speed
+11. scroll reveal
+12. mobile appearance
+13. floating music control
+14. gallery behavior
+15. RSVP behavior
+16. gift card behavior
+17. footer
+
+Use browser screenshots during development where available.
+
+Overlay screenshots when possible.
+
+Fix visual differences instead of assuming they are acceptable.
+
+---
+
+# 38. ANIMATION QA
+
+Verify:
+
+- no animation causes horizontal scroll
+- no animation causes layout jumps
+- no animation causes flickering
+- no animation blocks scrolling
+- no animation makes text unreadable
+- no excessive CPU usage
+- reduced-motion works
+- mobile animation remains smooth
+
+Target smooth 60fps behavior.
+
+Prefer transform + opacity animations over expensive layout properties.
+
+---
+
+# 39. ACCESSIBILITY
+
+Implement:
+
+- semantic HTML
+- proper heading hierarchy
+- alt text
+- keyboard navigation
+- focus states
+- accessible buttons
+- accessible dialog/lightbox
+- sufficient contrast
+- reduced-motion support
+- form labels
+- screen reader-friendly alerts
+
+---
+
+# 40. ERROR STATES
+
+Every backend interaction needs:
+
+Loading
+Success
+Error
+Empty
+
+Examples:
+
+RSVP submission:
+Submitting...
+Success!
+Gagal mengirim RSVP.
+
+Copy bank:
+Salin Nomor
+Tersalin!
+
+Gallery:
+Loading...
+No photos yet.
+
+Wishes:
+No wishes yet.
+
+---
+
+# 41. COMPONENT ARCHITECTURE
+
+Create reusable components:
+
+WeddingCover
+WeddingHero
+QuoteSection
+CoupleSection
+Countdown
+EventSection
+EventCard
+LoveStory
+LoveStoryTimeline
+Gallery
+GalleryLightbox
+WeddingGift
+BankCard
+RSVPForm
+GuestBook
+MusicPlayer
+OrnamentDivider
+FloralDecoration
+SectionTitle
+ScrollReveal
+BackToTop
+Footer
+
+Avoid duplication.
+
+---
+
+# 42. THEME SYSTEM
+
+The same application must support multiple wedding templates.
+
+Create a reusable theme engine.
+
+Example:
+
+theme:
+"vintage-botanical"
+
+Other future themes:
+
+"modern-minimal"
+"luxury-black-gold"
+"javanese-classic"
+"floral-romantic"
+
+Theme should control:
+
+- colors
+- typography
+- decorations
+- border radius
+- buttons
+- animation presets
+- background texture
+
+---
+
+# 43. CONFIG-DRIVEN CONTENT
+
+Do not hard-code wedding information.
+
+All wedding content must come from database.
+
+Frontend should effectively consume a wedding object:
+
+{
+  couple,
+  date,
+  quote,
+  events,
+  story,
+  gallery,
+  gifts,
+  rsvp,
+  wishes,
+  theme,
+  music
+}
+
+This allows multiple invitations to use the same codebase.
+
+---
+
+# 44. ADMIN PREVIEW
+
+Add:
+
+"Preview Invitation"
+
+button.
+
+When clicked:
+
+open the invitation as it will appear publicly.
+
+Also add:
+
+"Preview as Guest"
+
+Input:
+
+Guest Name
+
+Then preview:
+
+/invite/[slug]?to=[guest]
+
+---
+
+# 45. DRAFT / PUBLISHED STATUS
+
+Wedding invitation status:
+
+Draft
+Published
+Archived
+
+Only published invitations are publicly accessible.
+
+Admin can:
+- publish
+- unpublish
+- archive
+
+---
+
+# 46. CUSTOM DOMAIN READY
+
+Design architecture so future custom domains can map to an invitation.
+
+Example:
+
+rara-benno.example.com
+
+or:
+
+wedding.example.com/rara-benno
+
+Do not hard-code domain logic.
+
+---
+
+# 47. ADMIN DASHBOARD UI
+
+Admin dashboard should be modern and clean.
+
+Sidebar:
+
+Dashboard
+Invitations
+Guests
+RSVP
+Wishes
+Media
+Settings
+
+Dashboard widgets:
+
+Views
+RSVP
+Attendance
+Wishes
+
+Recent RSVP table.
+
+Recent wishes.
+
+Quick actions:
+
+Create Invitation
+Add Guest
+Upload Gallery
+Preview Invitation
+
+---
+
+# 48. DEPLOYMENT
+
+Application must be deployable to Vercel.
+
+Provide:
+
+.env.example
+
+Required variables:
+
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+NEXT_PUBLIC_SITE_URL
+
+Do not commit secrets.
+
+---
+
+# 49. PROJECT STRUCTURE
+
+Use a clean architecture similar to:
+
+app/
+  admin/
+  invite/
+    [slug]/
+  api/
+
+components/
+  wedding/
+  admin/
+  ui/
+
+lib/
+  supabase/
+  validation/
+  utilities/
+
+hooks/
+
+types/
+
+styles/
+
+public/
+  ornaments/
+  textures/
+  placeholders/
+
+supabase/
+  migrations/
+  seed/
+
+---
+
+# 50. SEED DEMO
+
+Create demo wedding:
+
+Rara & Benno
+
+Date:
+24 October 2026
+
+Demo guest:
+
+Abdi Indodana
+
+Demo URL:
+
+/invite/rara-benno?to=Abdi+Indodana
+
+Populate:
+
+- bride
+- groom
+- parents
+- quote
+- countdown
+- akad
+- reception
+- love story
+- gallery
+- wedding gift
+- RSVP
+- demo wishes
+
+Use placeholder/original assets when actual assets are not authorized.
+
+---
+
+# 51. IMPORTANT VISUAL RULE
+
+The result should NOT look like:
+
+- generic Bootstrap landing page
+- generic Tailwind template
+- generic SaaS website
+- generic wedding invitation from a template marketplace
+
+It must look like a premium digital wedding experience.
+
+The first impression should immediately communicate:
+
+"premium cinematic wedding invitation."
+
+---
+
+# 52. IMPORTANT UX RULE
+
+The user should be able to open the invitation and understand everything without instructions.
+
+Flow:
+
+LANDING / COVER
+↓
+Buka Undangan
+↓
+Hero
+↓
+Quote
+↓
+Bride & Groom
+↓
+Countdown
+↓
+Wedding Event
+↓
+Love Story
+↓
+Gallery / Our Moment
+↓
+Wedding Gift
+↓
+RSVP
+↓
+Best Wishes
+↓
+Closing
+
+Do not add unnecessary navbar menus that break the cinematic experience.
+
+---
+
+# 53. PERFORMANCE + MOTION BALANCE
+
+Animations are important, but content must remain usable.
+
+Never:
+- animate every word
+- create excessive particles
+- use heavy WebGL unless truly needed
+- make scrolling lag
+- force parallax on every element
+- hide important content for too long
+
+Motion should enhance the story.
+
+---
+
+# 54. FINAL ACCEPTANCE TEST
+
+Before considering the project complete:
+
+A. Open public invitation.
+
+B. Test:
+?to=Abdi+Indodana
+
+C. Confirm correct guest name.
+
+D. Click Buka Undangan.
+
+E. Verify music starts after interaction.
+
+F. Scroll entire page.
+
+G. Verify all reveal animations.
+
+H. Verify countdown.
+
+I. Verify Maps links.
+
+J. Verify gallery lightbox.
+
+K. Verify copy bank button.
+
+L. Submit RSVP.
+
+M. Submit guestbook message.
+
+N. Verify data appears in Supabase.
+
+O. Test admin login.
+
+P. Edit wedding data in dashboard.
+
+Q. Verify public invitation updates.
+
+R. Test mobile.
+
+S. Test desktop.
+
+T. Test reduced motion.
+
+U. Test invalid guest parameter.
+
+V. Test unpublished invitation.
+
+W. Test empty gallery.
+
+X. Test API errors.
+
+Y. Test refresh.
+
+Z. Test deep link directly.
+
+Fix every issue found.
+
+---
+
+# 55. MOST IMPORTANT INSTRUCTION
+
+Do not merely reproduce the section names.
+
+Reproduce the EXPERIENCE.
+
+The reference has a strong visual rhythm:
+- large whitespace
+- elegant typography
+- centered composition
+- decorative botanical layers
+- soft transitions
+- cinematic entrance
+- progressive reveal
+- emotional storytelling
+- premium photography
+- minimal navigation
+- immersive scrolling
+
+The final result should feel like a professionally designed digital wedding invitation rather than a web page containing wedding information.
+
+Build the complete working application, not just a frontend mockup.
+
+Everything must be functional.
+
+No dead buttons.
+
+No fake forms.
+
+No placeholder API calls.
+
+No hard-coded RSVP data.
+
+No fake admin dashboard.
+
+Use real Supabase persistence.
+
+Use real authentication.
+
+Use real image storage.
+
+Use real RSVP submission.
+
+Use real wishes/comments.
+
+Use real guest personalization.
+
+Use real countdown.
+
+Use real copy-to-clipboard functionality.
+
+Use real Google Maps links.
+
+Use real music controls.
+
+The finished application must be production-ready and easy to customize for another wedding.

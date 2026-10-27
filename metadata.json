@@ -1,0 +1,6 @@
+{
+  "name": "The Wedding of Abdi & Lula",
+  "description": "Undangan pernikahan digital eksklusif luxury modern Abdi & Lula dengan scrolling animations sinematik, RSVP, galeri, dan amplop digital.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

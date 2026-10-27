@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-script: "Cormorant Garamond", cursive, serif;
+
+  --color-gold: #B89B63;
+  --color-gold-light: #E8D8BD;
+  --color-gold-dark: #967B48;
+  --color-olive: #7D8B73;
+  --color-olive-dark: #5F6F55;
+  --color-charcoal: #3A302B;
+  --color-cream: #FAF7F0;
+  --color-cream-dark: #F3EFE6;
+  --color-maroon: #B89B63;
+  --color-maroon-light: #C5A870;
+  --color-maroon-dark: #967B48;
+  --color-paper: #FAF7F0;
+}
+
+:root {
+  --theme-primary: #B89B63;
+  --theme-primary-dark: #967B48;
+  --theme-primary-light: #E8D8BD;
+  --theme-olive: #7D8B73;
+  --theme-bg: #FAF7F0;
+  --theme-surface: #F3EFE6;
+  --theme-card: #FFFFFF;
+  --theme-text: #3A302B;
+  --theme-muted: #70635C;
+  --theme-gold: #B89B63;
+  --theme-bg-desktop: #221D1A;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #F3EFE6;
+}
+::-webkit-scrollbar-thumb {
+  background: #B89B63;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #967B48;
+}
+
+/* Wedding Music Player Disc Rotation Animation */
+@keyframes wdpMP3-muter {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-wdp-spin {
+  animation: wdpMP3-muter 4.5s linear infinite;
+}
+
+/* Botanical Swaying Animation */
+@keyframes goyang1 {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.goyang-1 {
+  animation: goyang1 5.5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* Floating animation for botanical ornaments */
+@keyframes softFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.soft-float {
+  animation: softFloat 4s ease-in-out infinite;
+}
+
+/* Fade In Up / Down animations */
+@keyframes fadeInUpLeaf {
+  0% {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDownLeaf {
+  0% {
+    opacity: 0;
+    transform: translateY(-25px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomInLeaf {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.anim-fade-up {
+  animation: fadeInUpLeaf 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-fade-down {
+  animation: fadeInDownLeaf 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-zoom-in {
+  animation: zoomInLeaf 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Luxury button gradient */
+.btn-leaf-gradient, .btn-luxury-gradient {
+  background: linear-gradient(135deg, #B89B63 0%, #8E733D 100%);
+  color: #FFFFFF;
+}
+
+.btn-leaf-gradient:hover, .btn-luxury-gradient:hover {
+  background: linear-gradient(135deg, #C5A870 0%, #7D6433 100%);
+}
+
+/* Safe area inset for mobile */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
