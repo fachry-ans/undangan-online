@@ -66,12 +66,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventType, setNewEventType] = useState<'akad' | 'resepsi' | 'ceremony' | 'party'>('akad');
-  const [newEventDate, setNewEventDate] = useState('Sabtu, 21 November 2026');
-  const [newEventStartTime, setNewEventStartTime] = useState('08:00');
+  const [newEventDate, setNewEventDate] = useState('Minggu, 27 Desember 2026');
+  const [newEventStartTime, setNewEventStartTime] = useState('09:00');
   const [newEventEndTime, setNewEventEndTime] = useState('10:00 WIB');
-  const [newEventVenue, setNewEventVenue] = useState('The Glasshouse Grand Ballroom');
-  const [newEventAddress, setNewEventAddress] = useState('Plaza Senayan Arcadia Lt. 3, Pintu Satu Senayan, Jakarta Pusat');
-  const [newEventMapsUrl, setNewEventMapsUrl] = useState('https://maps.google.com/?q=Plaza+Senayan+Arcadia+Jakarta');
+  const [newEventVenue, setNewEventVenue] = useState('Kediaman mempelai wanita');
+  const [newEventAddress, setNewEventAddress] = useState('Jl. Poncol Indah IV No.81 Rt 02/02 Cireundeu, Ciputat Timur, Tangerang Selatan, Banten');
+  const [newEventMapsUrl, setNewEventMapsUrl] = useState('https://maps.app.goo.gl/iTjm1YrjLN6HBwPg6?g_st=ic');
 
   // New Story Form State
   const [showAddStoryModal, setShowAddStoryModal] = useState(false);
@@ -89,10 +89,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [showAddBankModal, setShowAddBankModal] = useState(false);
   const [newBankName, setNewBankName] = useState('BCA');
   const [newBankNumber, setNewBankNumber] = useState('');
-  const [newBankHolder, setNewBankHolder] = useState('Rara Kirana');
+  const [newBankHolder, setNewBankHolder] = useState('Muhammad Fauzi Abdi');
 
   // Preview Guest Name
-  const [previewGuestInput, setPreviewGuestInput] = useState('Abdi Indodana');
+  const [previewGuestInput, setPreviewGuestInput] = useState('Tamu Undangan');
 
   const refreshData = () => {
     const current = WeddingService.getWedding(wedding.slug);

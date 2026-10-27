@@ -32,6 +32,15 @@ export class WeddingService {
       if (stored) {
         const list: WeddingData[] = JSON.parse(stored);
         const found = list.find((w) => w.slug === slug || w.id === slug || (slug === 'rara-benno' && w.id === DEFAULT_WEDDING.id));
+        if (
+          found?.id === DEFAULT_WEDDING.id &&
+          found.weddingDate === '2026-11-21T08:00:00+07:00' &&
+          found.couple?.groom?.fullName === 'Abdi Dananjaya, S.T.'
+        ) {
+          const migrated = { ...DEFAULT_WEDDING, viewsCount: found.viewsCount || DEFAULT_WEDDING.viewsCount };
+          this.saveWedding(migrated);
+          return migrated;
+        }
         if (found && found.couple?.groom?.nickname === 'Abdi') return found;
       }
     } catch {
