@@ -32,11 +32,19 @@ export class WeddingService {
       if (stored) {
         const list: WeddingData[] = JSON.parse(stored);
         const found = list.find((w) => w.slug === slug || w.id === slug || (slug === 'rara-benno' && w.id === DEFAULT_WEDDING.id));
-        if (
+        const isOriginalSeed =
           found?.id === DEFAULT_WEDDING.id &&
           found.weddingDate === '2026-11-21T08:00:00+07:00' &&
-          found.couple?.groom?.fullName === 'Abdi Dananjaya, S.T.'
-        ) {
+          found.couple?.groom?.fullName === 'Abdi Dananjaya, S.T.';
+        const isPreviousReferenceSeed =
+          found?.id === DEFAULT_WEDDING.id &&
+          found.weddingDate === '2026-12-27T09:00:00+07:00' &&
+          found.couple?.groom?.fullName === 'Muhammad Fauzi Abdi, S.Kom.' &&
+          found.couple.groom.photo === '/images/groom-reference.svg' &&
+          found.couple.bride?.photo === '/images/Galeri-5.jpg' &&
+          found.coverPhoto === '/images/Awal-2.jpg' &&
+          found.gallery?.[0]?.url === '/images/Galeri-1.jpg';
+        if (isOriginalSeed || isPreviousReferenceSeed) {
           const migrated = { ...DEFAULT_WEDDING, viewsCount: found.viewsCount || DEFAULT_WEDDING.viewsCount };
           this.saveWedding(migrated);
           return migrated;

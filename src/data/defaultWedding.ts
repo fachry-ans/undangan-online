@@ -69,7 +69,7 @@ export const DEFAULT_WEDDING: WeddingData = {
       nickname: 'Abdi',
       fullName: 'Muhammad Fauzi Abdi, S.Kom.',
       parents: 'Putra pertama dari Bpk. Santani dan Ibu Tutianah',
-      photo: '/images/groom-reference.svg',
+      photo: '/images/groom-exact.svg',
     },
     bride: {
       nickname: 'Lula',
