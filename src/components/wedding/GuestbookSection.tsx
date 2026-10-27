@@ -21,6 +21,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const loadData = () => {
     setWishes(WeddingService.getWishes(wedding.id));
@@ -37,23 +38,30 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
     }
   }, [initialGuestName, name]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !message.trim()) return;
+    if (!name.trim() || !message.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
-    WeddingService.submitWish({
-      weddingId: wedding.id,
-      guestName: name.trim(),
-      attendance: 'hadir',
-      message: message.trim(),
-    });
+    setSubmitError('');
+    try {
+      await WeddingService.submitWish({
+        weddingId: wedding.id,
+        guestName: name.trim(),
+        attendance: 'hadir',
+        message: message.trim(),
+      });
 
-    setMessage('');
-    setIsSubmitting(false);
-    setSubmittedSuccess(true);
-    setTimeout(() => setSubmittedSuccess(false), 3500);
-    loadData();
+      setMessage('');
+      setSubmittedSuccess(true);
+      setTimeout(() => setSubmittedSuccess(false), 3500);
+      loadData();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setSubmitError(`Ucapan belum tersimpan. ${errorMessage}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const hadirCount = rsvps.filter((r) => r.attendance === 'hadir').length;
@@ -117,6 +125,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               required
             />
           </div>
+          {submitError && <p role="alert" className="text-xs text-red-700">{submitError}</p>}
 
           <div>
             <label className="block text-[11px] font-semibold text-[#3A302B] uppercase tracking-wider mb-1 font-sans">

@@ -11,6 +11,74 @@ const STORAGE_KEYS = {
 };
 
 const LEGACY_SEED_VIEW_COUNT = 342;
+const APPS_SCRIPT_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim()
+  || 'https://script.google.com/macros/s/AKfycbywaWuBk3Xp-uIQXv1hsn7_YjiKeUJLKf8FAkn1x8cGYkDm-ZYsY_aWj27npOC4OQ5YFQ/exec';
+const ADMIN_KEY_STORAGE = 'elegance_admin_key';
+
+interface RemoteSnapshot {
+  ok: boolean;
+  error?: string;
+  wedding: WeddingData | null;
+  guests: GuestRecord[];
+  rsvps: RSVPRecord[];
+  wishes: WishRecord[];
+}
+
+function reportSyncError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error('Google Sheets sync failed:', message);
+  window.dispatchEvent(new CustomEvent('wedding-sync-error', { detail: message }));
+}
+
+function fetchJsonp<T>(params: Record<string, string>): Promise<T> {
+  if (!APPS_SCRIPT_URL) return Promise.reject(new Error('URL Apps Script belum dikonfigurasi.'));
+
+  return new Promise((resolve, reject) => {
+    const callbackName = `weddingCallback${Date.now()}${Math.random().toString(36).slice(2)}`;
+    const script = document.createElement('script');
+    const url = new URL(APPS_SCRIPT_URL);
+    Object.entries({ ...params, callback: callbackName }).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error('Google Sheets tidak merespons. Periksa URL dan deployment Apps Script.'));
+    }, 15000);
+    const cleanup = () => {
+      window.clearTimeout(timeout);
+      Reflect.deleteProperty(window, callbackName);
+      script.remove();
+    };
+
+    Object.defineProperty(window, callbackName, {
+      configurable: true,
+      value: (result: T) => {
+        cleanup();
+        resolve(result);
+      },
+    });
+    script.onerror = () => {
+      cleanup();
+      reject(new Error('Gagal menghubungi endpoint Google Apps Script.'));
+    };
+    script.src = url.toString();
+    document.head.appendChild(script);
+  });
+}
+
+async function postMutation(action: string, data: unknown, adminKey?: string) {
+  if (!APPS_SCRIPT_URL) return;
+  const response = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify({ action, data, adminKey }),
+  });
+  if (response.type !== 'opaque') {
+    throw new Error('Respons Apps Script tidak sesuai.');
+  }
+}
 
 // Apply CSS variables dynamically to match the current wedding theme
 export function applyTheme(theme: ThemeConfig) {
@@ -28,6 +96,108 @@ export function applyTheme(theme: ThemeConfig) {
 }
 
 export class WeddingService {
+  private static remoteInitialized = false;
+  private static sharedWeddingExists = false;
+
+  static isSharedDatabaseConfigured(): boolean {
+    return Boolean(APPS_SCRIPT_URL);
+  }
+
+  static async initializeSharedData(slug: string): Promise<WeddingData> {
+    if (!APPS_SCRIPT_URL) return this.getWedding(slug);
+    const snapshot = await fetchJsonp<RemoteSnapshot>({
+      action: 'snapshot',
+      weddingId: slug,
+      key: sessionStorage.getItem(ADMIN_KEY_STORAGE) || '',
+    });
+    if (!snapshot.ok) throw new Error(snapshot.error || 'Tidak bisa membaca database spreadsheet.');
+    this.remoteInitialized = true;
+    this.sharedWeddingExists = Boolean(snapshot.wedding);
+
+    if (!snapshot.wedding) return this.getWedding(slug);
+    this.writeWeddingToCache(snapshot.wedding);
+    localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(snapshot.guests));
+    localStorage.setItem(STORAGE_KEYS.RSVPS, JSON.stringify(snapshot.rsvps));
+    localStorage.setItem(STORAGE_KEYS.WISHES, JSON.stringify(snapshot.wishes));
+    return snapshot.wedding;
+  }
+
+  static async authorizeAdmin(key: string): Promise<boolean> {
+    if (!APPS_SCRIPT_URL) throw new Error('URL Apps Script belum dikonfigurasi.');
+    const result = await fetchJsonp<{ ok: boolean; authorized?: boolean; error?: string }>({
+      action: 'authorize',
+      key,
+    });
+    if (!result.ok) throw new Error(result.error || 'Gagal memeriksa kunci admin.');
+    if (result.authorized) sessionStorage.setItem(ADMIN_KEY_STORAGE, key);
+    return Boolean(result.authorized);
+  }
+
+  static async syncLocalDataToSharedDatabase(slug: string): Promise<void> {
+    const wedding = this.getWedding(slug);
+    const data = {
+      wedding,
+      guests: this.getGuests(wedding.id),
+      rsvps: this.getRSVPs(wedding.id),
+      wishes: this.getWishes(wedding.id),
+    };
+    await postMutation('syncAll', data, sessionStorage.getItem(ADMIN_KEY_STORAGE) || undefined);
+    const snapshot = await fetchJsonp<RemoteSnapshot>({
+      action: 'snapshot',
+      weddingId: wedding.id,
+      key: sessionStorage.getItem(ADMIN_KEY_STORAGE) || '',
+    });
+    if (!snapshot.ok || snapshot.wedding?.id !== wedding.id) {
+      throw new Error(snapshot.error || 'Data undangan belum tersimpan ke spreadsheet.');
+    }
+    this.remoteInitialized = true;
+    this.sharedWeddingExists = true;
+  }
+
+  static hasSharedWedding(): boolean {
+    return this.sharedWeddingExists;
+  }
+
+  private static writeWeddingToCache(wedding: WeddingData) {
+    const stored = localStorage.getItem(STORAGE_KEYS.WEDDINGS);
+    const list: WeddingData[] = stored ? JSON.parse(stored) : [];
+    const index = list.findIndex((item) => item.id === wedding.id);
+    if (index >= 0) list[index] = wedding;
+    else list.push(wedding);
+    localStorage.setItem(STORAGE_KEYS.WEDDINGS, JSON.stringify(list));
+  }
+
+  private static queueRemoteMutation(action: string, data: unknown, requiresAdmin = false): Promise<void> {
+    if (!APPS_SCRIPT_URL || !this.remoteInitialized) return Promise.resolve();
+    const adminKey = sessionStorage.getItem(ADMIN_KEY_STORAGE) || undefined;
+    if (requiresAdmin && !adminKey) return Promise.resolve();
+
+    const pending = (async () => {
+      await postMutation(action, data, adminKey);
+      const record = data as { weddingId?: string; id?: string };
+      const snapshot = await fetchJsonp<RemoteSnapshot>({
+        action: 'snapshot',
+        weddingId: record.weddingId || this.getWedding().id,
+        key: adminKey || '',
+      });
+      if (!snapshot.ok) throw new Error(snapshot.error || 'Gagal memverifikasi perubahan spreadsheet.');
+      const records = action.includes('Guest') ? snapshot.guests
+        : action.includes('RSVP') ? snapshot.rsvps
+          : action.includes('Wish') ? snapshot.wishes : [];
+      if (action.startsWith('delete')) {
+        if (records.some((item) => item.id === record.id)) throw new Error('Penghapusan belum tersimpan di spreadsheet.');
+      } else if (action === 'saveWedding') {
+        if (!snapshot.wedding || JSON.stringify(snapshot.wedding) !== JSON.stringify(data)) {
+          throw new Error('Perubahan undangan belum tersimpan di spreadsheet.');
+        }
+      } else if (action !== 'incrementViews' && action !== 'syncAll' &&
+        !records.some((item) => item.id === record.id)) {
+        throw new Error('Perubahan belum tersimpan di spreadsheet.');
+      }
+    })();
+    return pending;
+  }
+
   // Load wedding by slug
   static getWedding(slug: string = 'abdi-lula'): WeddingData {
     try {
@@ -92,15 +262,8 @@ export class WeddingService {
   // Save wedding changes
   static saveWedding(wedding: WeddingData): void {
     try {
-      const stored = localStorage.getItem(STORAGE_KEYS.WEDDINGS);
-      let list: WeddingData[] = stored ? JSON.parse(stored) : [DEFAULT_WEDDING];
-      const index = list.findIndex((w) => w.id === wedding.id);
-      if (index >= 0) {
-        list[index] = wedding;
-      } else {
-        list.push(wedding);
-      }
-      localStorage.setItem(STORAGE_KEYS.WEDDINGS, JSON.stringify(list));
+      this.writeWeddingToCache(wedding);
+      void this.queueRemoteMutation('saveWedding', wedding, true).catch(reportSyncError);
     } catch (e) {
       console.error('Failed to save wedding:', e);
     }
@@ -111,7 +274,8 @@ export class WeddingService {
     try {
       const wedding = this.getWedding(weddingId);
       wedding.viewsCount = (wedding.viewsCount || 0) + 1;
-      this.saveWedding(wedding);
+      this.writeWeddingToCache(wedding);
+      void this.queueRemoteMutation('incrementViews', { weddingId }).catch(reportSyncError);
       return wedding.viewsCount;
     } catch {
       return 1;
@@ -131,7 +295,7 @@ export class WeddingService {
   }
 
   // Submit RSVP
-  static submitRSVP(rsvp: Omit<RSVPRecord, 'id' | 'createdAt'>): RSVPRecord {
+  static async submitRSVP(rsvp: Omit<RSVPRecord, 'id' | 'createdAt'>): Promise<RSVPRecord> {
     const newRecord: RSVPRecord = {
       ...rsvp,
       id: `rsvp-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -148,8 +312,10 @@ export class WeddingService {
       this.updateGuestRSVPStatus(rsvp.weddingId, rsvp.name, rsvp.attendance);
     } catch (e) {
       console.error('Error saving RSVP:', e);
+      throw e;
     }
 
+    await this.queueRemoteMutation('submitRSVP', newRecord);
     return newRecord;
   }
 
@@ -166,7 +332,7 @@ export class WeddingService {
   }
 
   // Submit Wish
-  static submitWish(wish: Omit<WishRecord, 'id' | 'createdAt'>): WishRecord {
+  static async submitWish(wish: Omit<WishRecord, 'id' | 'createdAt'>): Promise<WishRecord> {
     const newWish: WishRecord = {
       ...wish,
       id: `wish-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -180,8 +346,10 @@ export class WeddingService {
       localStorage.setItem(STORAGE_KEYS.WISHES, JSON.stringify(all));
     } catch (e) {
       console.error('Error saving wish:', e);
+      throw e;
     }
 
+    await this.queueRemoteMutation('submitWish', newWish);
     return newWish;
   }
 
@@ -193,6 +361,8 @@ export class WeddingService {
         const all: WishRecord[] = JSON.parse(stored);
         const filtered = all.filter((w) => w.id !== wishId);
         localStorage.setItem(STORAGE_KEYS.WISHES, JSON.stringify(filtered));
+        const deleted = all.find((wish) => wish.id === wishId);
+        if (deleted) void this.queueRemoteMutation('deleteWish', { id: wishId, weddingId: deleted.weddingId }, true).catch(reportSyncError);
       }
     } catch (e) {
       console.error('Error deleting wish:', e);
@@ -223,6 +393,7 @@ export class WeddingService {
         all.push(guest);
       }
       localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(all));
+      void this.queueRemoteMutation('saveGuest', guest, true).catch(reportSyncError);
     } catch (e) {
       console.error('Error saving guest:', e);
     }
@@ -236,6 +407,8 @@ export class WeddingService {
         const all: GuestRecord[] = JSON.parse(stored);
         const filtered = all.filter((g) => g.id !== guestId);
         localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(filtered));
+        const deleted = all.find((guest) => guest.id === guestId);
+        if (deleted) void this.queueRemoteMutation('deleteGuest', { id: guestId, weddingId: deleted.weddingId }, true).catch(reportSyncError);
       }
     } catch (e) {
       console.error('Error deleting guest:', e);

@@ -27,7 +27,37 @@ export default function App() {
   const [guestName, setGuestName] = useState('Tamu Undangan');
   const [isAdminView, setIsAdminView] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [syncError, setSyncError] = useState('');
   const musicPlayerRef = useRef<MusicPlayerHandle>(null);
+
+  useEffect(() => {
+    let active = true;
+    if (WeddingService.isSharedDatabaseConfigured()) {
+      WeddingService.initializeSharedData('abdi-lula')
+        .then((sharedWedding) => {
+          if (active) {
+            setWedding(sharedWedding);
+            setRefreshKey((previous) => previous + 1);
+          }
+        })
+        .catch((error: unknown) => {
+          const message = error instanceof Error ? error.message : String(error);
+          console.error('Unable to load shared wedding data:', error);
+          if (active) setSyncError(message);
+        });
+    }
+
+    const handleSyncError = (event: Event) => {
+      const message = (event as CustomEvent<string>).detail;
+      setSyncError(message || 'Google Sheets sync gagal. Periksa deployment dan koneksi.');
+    };
+    window.addEventListener('wedding-sync-error', handleSyncError);
+
+    return () => {
+      active = false;
+      window.removeEventListener('wedding-sync-error', handleSyncError);
+    };
+  }, []);
 
   // Parse guest name from URL query: ?to=Abdi+Indodana
   useEffect(() => {
@@ -84,22 +114,73 @@ export default function App() {
     window.history.pushState({}, '', url.toString());
   };
 
+  const handleAdminAccess = async () => {
+    if (!WeddingService.isSharedDatabaseConfigured()) {
+      window.alert('Database Google Sheets belum dikonfigurasi. Isi VITE_GOOGLE_APPS_SCRIPT_URL terlebih dahulu.');
+      return;
+    }
+    try {
+      const currentWedding = await WeddingService.initializeSharedData(wedding.slug);
+      setWedding(currentWedding);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setSyncError(message);
+      window.alert(`Gagal membaca database: ${message}`);
+      return;
+    }
+    const key = window.prompt('Masukkan kunci admin spreadsheet:');
+    if (!key) return;
+    try {
+      const authorized = await WeddingService.authorizeAdmin(key);
+      if (!authorized) {
+        window.alert('Kunci admin tidak valid.');
+        return;
+      }
+      const authorizedWedding = await WeddingService.initializeSharedData(wedding.slug);
+      setWedding(authorizedWedding);
+      if (!WeddingService.hasSharedWedding()) {
+        await WeddingService.syncLocalDataToSharedDatabase(wedding.slug);
+        setWedding(WeddingService.getWedding(wedding.slug));
+      }
+      setSyncError('');
+      setIsAdminView(true);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setSyncError(message);
+      window.alert(`Gagal menghubungkan database: ${message}`);
+    }
+  };
+
   if (isAdminView) {
     return (
-      <AdminDashboard
-        onBackToInvitation={() => {
-          setIsAdminView(false);
-          const current = WeddingService.getWedding(wedding.slug);
-          setWedding(current);
-          applyTheme(current.theme);
-        }}
-        onPreviewGuest={handlePreviewAsGuest}
-      />
+      <>
+        {syncError && (
+          <div role="alert" className="fixed top-3 left-3 right-3 z-[100] mx-auto max-w-xl rounded-xl bg-red-700 px-4 py-3 text-sm text-white shadow-lg">
+            Google Sheets: {syncError}
+            <button type="button" className="ml-3 font-bold underline" onClick={() => setSyncError('')}>Tutup</button>
+          </div>
+        )}
+        <AdminDashboard
+          onBackToInvitation={() => {
+            setIsAdminView(false);
+            const current = WeddingService.getWedding(wedding.slug);
+            setWedding(current);
+            applyTheme(current.theme);
+          }}
+          onPreviewGuest={handlePreviewAsGuest}
+        />
+      </>
     );
   }
 
   return (
     <div className="min-h-screen w-full relative bg-[#1E1815] bg-radial from-[#2A221E] to-[#140F0D]">
+      {syncError && (
+        <div role="alert" className="fixed top-3 left-3 right-3 z-[100] mx-auto max-w-xl rounded-xl bg-red-700 px-4 py-3 text-sm text-white shadow-lg">
+          Google Sheets: {syncError}
+          <button type="button" className="ml-3 font-bold underline" onClick={() => setSyncError('')}>Tutup</button>
+        </div>
+      )}
       {/* 1. Fullscreen / Centered Opening Cover */}
       <WeddingCover
         wedding={wedding}
@@ -152,7 +233,7 @@ export default function App() {
         {/* 12. Footer & Closing Blessing (Gunungan Wayang Jawa & Leafitation credits) */}
         <ClosingSection
           wedding={wedding}
-          onAdminAccess={() => setIsAdminView(true)}
+          onAdminAccess={handleAdminAccess}
         />
 
         {/* 13. Floating Music Player (Kusuma Wijaya track & 4s spin animation) */}

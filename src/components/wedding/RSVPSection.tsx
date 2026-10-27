@@ -20,6 +20,8 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({
   const [guestCount, setGuestCount] = useState<number>(1);
   const [city, setCity] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
     if (initialGuestName && !name) {
@@ -27,20 +29,29 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({
     }
   }, [initialGuestName, name]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || isSubmitting) return;
 
-    WeddingService.submitRSVP({
-      weddingId: wedding.id,
-      name: name.trim(),
-      attendance,
-      guestCount: attendance === 'hadir' ? guestCount : 0,
-      city: city.trim(),
-    });
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      await WeddingService.submitRSVP({
+        weddingId: wedding.id,
+        name: name.trim(),
+        attendance,
+        guestCount: attendance === 'hadir' ? guestCount : 0,
+        city: city.trim(),
+      });
 
-    setIsSuccess(true);
-    if (onRSVPSubmitted) onRSVPSubmitted();
+      setIsSuccess(true);
+      if (onRSVPSubmitted) onRSVPSubmitted();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setSubmitError(`Konfirmasi belum tersimpan. ${message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -161,11 +172,13 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({
               </div>
 
               <div className="pt-3">
+                {submitError && <p role="alert" className="mb-3 text-xs text-red-700">{submitError}</p>}
                 <button
                   type="submit"
-                  className="w-full py-3 px-6 rounded-full text-white text-[12px] font-bold uppercase tracking-[2px] shadow-md hover:shadow-lg transition-all btn-luxury-gradient cursor-pointer hover:scale-[1.02] active:scale-95 font-sans"
+                  disabled={isSubmitting}
+                  className="w-full py-3 px-6 rounded-full text-white text-[12px] font-bold uppercase tracking-[2px] shadow-md hover:shadow-lg transition-all btn-luxury-gradient cursor-pointer hover:scale-[1.02] active:scale-95 font-sans disabled:opacity-60"
                 >
-                  Kirim Konfirmasi RSVP
+                  {isSubmitting ? 'Menyimpan...' : 'Kirim Konfirmasi RSVP'}
                 </button>
               </div>
             </form>
