@@ -31,14 +31,14 @@ export const WeddingGiftSection: React.FC<WeddingGiftSectionProps> = ({ wedding 
           {
             id: 'bca-1',
             bankName: 'BCA (Bank Central Asia)',
-            accountNumber: '8830918231',
-            accountHolder: 'Abdi Dananjaya',
+            accountNumber: '3100252961',
+            accountHolder: 'Muhammad Fauzi Abdi',
           },
           {
             id: 'mandiri-1',
-            bankName: 'Bank Mandiri',
-            accountNumber: '1370018829103',
-            accountHolder: 'Lula Maheswari',
+            bankName: 'Bank BCA',
+            accountNumber: '6090593658',
+            accountHolder: 'Lula Agmalia',
           },
         ];
 
