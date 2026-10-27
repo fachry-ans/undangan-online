@@ -7,7 +7,10 @@ const STORAGE_KEYS = {
   RSVPS: 'elegance_rsvps',
   WISHES: 'elegance_wishes',
   GUESTS: 'elegance_guests',
+  LEGACY_VIEW_COUNT_RESET: 'elegance_legacy_view_count_reset',
 };
+
+const LEGACY_SEED_VIEW_COUNT = 342;
 
 // Apply CSS variables dynamically to match the current wedding theme
 export function applyTheme(theme: ThemeConfig) {
@@ -50,8 +53,31 @@ export class WeddingService {
           found.couple?.groom?.fullName === DEFAULT_WEDDING.couple.groom.fullName &&
           (found.couple.groom.photo === '/images/groom-exact.svg' ||
             found.gallery?.[0]?.url === '/images/Galeri-1.jpg');
+        const isLegacySeedViewCount =
+          found?.id === DEFAULT_WEDDING.id &&
+          found.weddingDate === DEFAULT_WEDDING.weddingDate &&
+          found.couple?.groom?.fullName === DEFAULT_WEDDING.couple.groom.fullName &&
+          !localStorage.getItem(STORAGE_KEYS.LEGACY_VIEW_COUNT_RESET);
+        const shouldResetLegacySeedViewCount =
+          isLegacySeedViewCount &&
+          (found?.viewsCount ?? 0) >= LEGACY_SEED_VIEW_COUNT;
+
+        if (isLegacySeedViewCount) {
+          localStorage.setItem(STORAGE_KEYS.LEGACY_VIEW_COUNT_RESET, 'true');
+        }
+
         if (isOriginalSeed || isPreviousReferenceSeed || isPreviousLocalSeed) {
-          const migrated = { ...DEFAULT_WEDDING, viewsCount: found.viewsCount || DEFAULT_WEDDING.viewsCount };
+          const migrated = {
+            ...DEFAULT_WEDDING,
+            viewsCount: shouldResetLegacySeedViewCount
+              ? 0
+              : found.viewsCount ?? DEFAULT_WEDDING.viewsCount,
+          };
+          this.saveWedding(migrated);
+          return migrated;
+        }
+        if (shouldResetLegacySeedViewCount) {
+          const migrated = { ...found, viewsCount: 0 };
           this.saveWedding(migrated);
           return migrated;
         }

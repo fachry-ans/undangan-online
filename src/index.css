@@ -163,3 +163,51 @@ html {
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 16px);
 }
+
+.sakura-petals {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sakura-petal {
+  position: absolute;
+  top: -24px;
+  left: var(--sakura-left);
+  width: var(--sakura-size);
+  height: calc(var(--sakura-size) * 0.72);
+  border-radius: 2px 85% 2px 85%;
+  background: linear-gradient(135deg, #fff4f5 4%, #f3b6c3 58%, #df8da3 100%);
+  box-shadow: inset -1px -1px 2px rgb(161 77 103 / 12%);
+  opacity: 0;
+  animation: sakura-fall var(--sakura-duration) linear var(--sakura-delay) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes sakura-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -4vh, 0) rotate(var(--sakura-start));
+  }
+  10% {
+    opacity: 0.68;
+  }
+  50% {
+    transform: translate3d(var(--sakura-drift), 52vh, 0) rotate(calc(var(--sakura-start) + 360deg));
+  }
+  90% {
+    opacity: 0.58;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 108vh, 0) rotate(calc(var(--sakura-start) + 720deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sakura-petals {
+    display: none;
+  }
+}

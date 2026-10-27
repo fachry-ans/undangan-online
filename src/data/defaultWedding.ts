@@ -194,7 +194,7 @@ export const DEFAULT_WEDDING: WeddingData = {
     thanksText: 'Atas kehadiran dan doa tulus yang diberikan, kami haturkan terima kasih sedalam-dalamnya. Wassalamu’alaikum Warahmatullahi Wabarakatuh',
     photo: '/images/Awal-2.jpg',
   },
-  viewsCount: 342,
+  viewsCount: 0,
 };
 
 export const INITIAL_RSVPS: RSVPRecord[] = [];

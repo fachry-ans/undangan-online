@@ -16,6 +16,7 @@ import { RSVPSection } from './components/wedding/RSVPSection';
 import { GuestbookSection } from './components/wedding/GuestbookSection';
 import { ClosingSection } from './components/wedding/ClosingSection';
 import { MusicPlayer } from './components/wedding/MusicPlayer';
+import { SakuraPetals } from './components/common/SakuraPetals';
 
 // Admin Console
 import { AdminDashboard } from './components/admin/AdminDashboard';
@@ -42,7 +43,6 @@ export default function App() {
     }
 
     applyTheme(wedding.theme);
-    WeddingService.incrementViews(wedding.id);
   }, [wedding.id, wedding.theme]);
 
   // Lock scroll when cover is closed
@@ -61,6 +61,8 @@ export default function App() {
   }, [isCoverOpen, isAdminView]);
 
   const handleOpenInvitation = () => {
+    const viewsCount = WeddingService.incrementViews(wedding.id);
+    setWedding((current) => ({ ...current, viewsCount }));
     setIsCoverOpen(true);
   };
 
@@ -101,6 +103,7 @@ export default function App() {
         isOpen={isCoverOpen}
         onOpen={handleOpenInvitation}
       />
+      <SakuraPetals active={isCoverOpen && !isAdminView} />
 
       {/* 500px Center Mobile-First Container with modern luxury styling */}
       <div className="w-full max-w-[500px] mx-auto min-h-screen bg-[#FAF7F0] shadow-[0_0_80px_rgba(0,0,0,0.45)] relative overflow-x-hidden border-x border-[#E8D8BD]/50">

@@ -462,7 +462,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Total Pengunjung
                 </span>
                 <span className="text-3xl font-serif font-bold text-stone-900 mt-1 block">
-                  {wedding.viewsCount || 148}
+                  {wedding.viewsCount ?? 0}
                 </span>
                 <span className="text-[11px] text-stone-400 mt-1 block">
                   Hits pada halaman undangan
