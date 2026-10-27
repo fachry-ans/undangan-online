@@ -22,6 +22,16 @@ export const QuoteSection: React.FC<QuoteSectionProps> = ({ wedding }) => {
           <h3 className="text-[12px] sm:text-[13px] font-semibold tracking-[3px] uppercase text-[#B89B63] font-sans">
             {wedding.quote.heading || 'WE FOUND LOVE'}
           </h3>
+          {wedding.opening && (
+            <>
+              <h2 className="text-[26px] sm:text-[30px] text-[#3A302B] font-serif font-normal leading-tight mt-3">
+                {wedding.opening.heading}
+              </h2>
+              <p className="text-[13px] text-[#70635C] leading-relaxed mt-3 font-sans">
+                {wedding.opening.text}
+              </p>
+            </>
+          )}
         </ScrollReveal>
 
         <ScrollReveal animation="blur-up" delay={450} duration={1200}>

@@ -87,9 +87,14 @@ export interface WeddingData {
   title: string;
   coverTitle: string;
   coverSubtitle: string;
+  coverPhoto?: string;
   weddingDate: string; // ISO string
   timezone: string;
   status: 'published' | 'draft' | 'archived';
+  opening?: {
+    heading: string;
+    text: string;
+  };
   quote: {
     heading: string;
     text: string;

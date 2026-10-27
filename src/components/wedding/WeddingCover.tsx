@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MailOpen, Sparkles } from 'lucide-react';
 import { WeddingData } from '../../types/wedding';
+import { formatWeddingDate } from '../../utils/weddingDate';
 
 interface WeddingCoverProps {
   wedding: WeddingData;
@@ -57,7 +58,7 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
       {/* Outer desktop background with warm ambient blur */}
       <div
         className="hidden md:block absolute inset-0 bg-cover bg-center bg-no-repeat filter brightness-[0.4] blur-sm"
-        style={{ backgroundImage: `url('${wedding.gallery[0]?.url || '/images/hero_couple.jpg'}')` }}
+        style={{ backgroundImage: `url('${wedding.coverPhoto || wedding.gallery[0]?.url || '/images/hero_couple.jpg'}')` }}
       />
       <div className="hidden md:block absolute inset-0 bg-black/50" />
 
@@ -65,7 +66,7 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
       <div
         className="relative w-full max-w-[500px] h-full sm:h-[100svh] max-h-[920px] bg-cover bg-center bg-no-repeat flex flex-col justify-between items-center text-center px-6 py-10 shadow-2xl overflow-hidden"
         style={{
-          backgroundImage: `linear-gradient(to top, rgba(28, 22, 19, 0.95) 0%, rgba(28, 22, 19, 0.55) 50%, rgba(28, 22, 19, 0.85) 100%), url('${wedding.gallery[0]?.url || '/images/hero_couple.jpg'}')`,
+          backgroundImage: `linear-gradient(to top, rgba(28, 22, 19, 0.95) 0%, rgba(28, 22, 19, 0.55) 50%, rgba(28, 22, 19, 0.85) 100%), url('${wedding.coverPhoto || wedding.gallery[0]?.url || '/images/hero_couple.jpg'}')`,
         }}
       >
         {/* Top Ornament Arch Accent */}
@@ -111,7 +112,7 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
           >
             <div className="h-[1px] w-10 bg-[#B89B63]/60" />
             <p className="text-[12px] sm:text-[13px] tracking-[3px] text-[#D4BC8B] font-medium uppercase">
-              Sabtu, 21 November 2026
+              {formatWeddingDate(wedding)}
             </p>
             <div className="h-[1px] w-10 bg-[#B89B63]/60" />
           </div>

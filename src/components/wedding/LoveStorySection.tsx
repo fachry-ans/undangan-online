@@ -16,13 +16,13 @@ export const LoveStorySection: React.FC<LoveStorySectionProps> = ({ wedding }) =
             Kisah Kami
           </div>
           <h2 className="text-[36px] sm:text-[42px] text-[#3A302B] font-serif font-normal leading-tight mt-1">
-            Love Story
+            Kisah Perjalanan Kami
           </h2>
         </ScrollReveal>
 
         <ScrollReveal animation="fade-up" delay={250} duration={1200}>
           <p className="text-[13px] sm:text-[14px] text-[#70635C] italic max-w-xs mx-auto font-serif">
-            "Every love story is beautiful, but ours is my favorite."
+            Setiap lembaran cerita mempertemukan dua insan hingga menyatu dalam satu ikatan suci.
           </p>
         </ScrollReveal>
       </div>

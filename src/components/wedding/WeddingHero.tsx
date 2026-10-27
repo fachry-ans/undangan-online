@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { WeddingData } from '../../types/wedding';
 import { ScrollReveal } from '../common/ScrollReveal';
+import { formatWeddingDate } from '../../utils/weddingDate';
 
 interface WeddingHeroProps {
   wedding: WeddingData;
@@ -48,7 +49,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({ wedding }) => {
       <div className="space-y-2.5 z-10">
         <ScrollReveal animation="fade-down" delay={250} duration={1200}>
           <h2 className="text-[13px] sm:text-[14px] uppercase tracking-[4px] text-[#70635C] font-medium font-sans">
-            THE WEDDING OF
+            {wedding.coverTitle}
           </h2>
         </ScrollReveal>
 
@@ -61,7 +62,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({ wedding }) => {
         <ScrollReveal animation="fade-up" delay={650} duration={1200}>
           <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-xs border border-[#E8D8BD]/80 shadow-xs">
             <span className="text-[13px] tracking-[3px] text-[#B89B63] font-medium uppercase font-sans">
-              21 . 11 . 2026
+              {formatWeddingDate(wedding)}
             </span>
           </div>
         </ScrollReveal>

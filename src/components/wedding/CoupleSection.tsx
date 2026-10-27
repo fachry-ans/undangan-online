@@ -19,19 +19,10 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ wedding }) => {
             Mempelai
           </div>
           <h2 className="text-[36px] sm:text-[42px] text-[#3A302B] font-serif font-normal leading-[1.05]">
-            Groom &amp; Bride
+            Mempelai Pria &amp; Wanita
           </h2>
         </ScrollReveal>
 
-        <ScrollReveal animation="fade-up" delay={250} duration={1200}>
-          <p className="text-[13px] sm:text-[14px] text-[#70635C] leading-relaxed max-w-sm mx-auto font-sans">
-            <span className="font-serif italic font-semibold text-[#3A302B]">
-              Assalamu’alaikum Warahmatullahi Wabarakatuh
-            </span>
-            <br />
-            Dengan memohon Rahmat &amp; Ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri hari bahagia pernikahan kami:
-          </p>
-        </ScrollReveal>
       </div>
 
       {/* Groom Card: Enters from left with 1200ms slow animation */}

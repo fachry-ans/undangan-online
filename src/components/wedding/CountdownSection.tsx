@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CalendarPlus } from 'lucide-react';
 import { WeddingData } from '../../types/wedding';
 import { ScrollReveal } from '../common/ScrollReveal';
+import { formatWeddingDate, getWeddingCalendarUrl } from '../../utils/weddingDate';
 
 interface CountdownSectionProps {
   wedding: WeddingData;
@@ -50,15 +51,7 @@ export const CountdownSection: React.FC<CountdownSectionProps> = ({ wedding }) =
   }, [wedding.weddingDate]);
 
   const handleAddToCalendar = () => {
-    const title = encodeURIComponent(`The Wedding of Abdi & Lula`);
-    const details = encodeURIComponent(
-      `Akad Nikah & Resepsi Pernikahan Abdi & Lula.\nVenue: Masjid Agung Al-Bina Senayan & The Glasshouse Senayan, Jakarta.`
-    );
-    const location = encodeURIComponent('Masjid Agung Al-Bina Senayan & The Glasshouse Senayan Jakarta');
-    // 21 Nov 2026 08:00 WIB (01:00 UTC) - 14:30 WIB (07:30 UTC)
-    const dates = '20261121T010000Z/20261121T073000Z';
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
-    window.open(googleCalendarUrl, '_blank');
+    window.open(getWeddingCalendarUrl(wedding), '_blank');
   };
 
   return (
@@ -77,7 +70,7 @@ export const CountdownSection: React.FC<CountdownSectionProps> = ({ wedding }) =
 
           <ScrollReveal animation="zoom-in" delay={250} duration={1200}>
             <h2 className="text-[34px] sm:text-[40px] text-[#3A302B] font-serif font-normal leading-tight">
-              Sabtu, 21 November 2026
+              {formatWeddingDate(wedding)}
             </h2>
           </ScrollReveal>
         </div>

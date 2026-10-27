@@ -32,13 +32,13 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ wedding }) => {
             Galeri Foto
           </div>
           <h2 className="text-[36px] sm:text-[42px] text-[#3A302B] font-serif font-normal leading-tight mt-1">
-            Our Moment
+            Our Moments
           </h2>
         </ScrollReveal>
 
         <ScrollReveal animation="fade-up" delay={250} duration={1200}>
           <p className="text-[13px] sm:text-[14px] text-[#70635C] italic font-serif">
-            "A moment is better when shared with you."
+            Goresan kenangan dan keindahan rasa yang terabadikan dalam setiap momen.
           </p>
         </ScrollReveal>
       </div>

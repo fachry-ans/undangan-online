@@ -24,7 +24,7 @@ import { Shield } from 'lucide-react';
 export default function App() {
   const [wedding, setWedding] = useState<WeddingData>(() => WeddingService.getWedding('abdi-lula'));
   const [isCoverOpen, setIsCoverOpen] = useState(false);
-  const [guestName, setGuestName] = useState('Abdi Indodana');
+  const [guestName, setGuestName] = useState('Tamu Undangan');
   const [isAdminView, setIsAdminView] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 

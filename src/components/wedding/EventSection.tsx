@@ -17,13 +17,13 @@ export const EventSection: React.FC<EventSectionProps> = ({ wedding }) => {
             Rangkaian Acara
           </div>
           <h2 className="text-[36px] sm:text-[42px] text-[#3A302B] font-serif font-normal leading-tight mt-1">
-            Wedding Event
+            Waktu &amp; Tempat Pelaksanaan
           </h2>
         </ScrollReveal>
 
         <ScrollReveal animation="fade-up" delay={250} duration={1200}>
           <p className="text-[13px] text-[#70635C] leading-relaxed max-w-sm mx-auto font-sans">
-            Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara kami:
+            Dengan penuh rasa hormat, kami mengharapkan kehadiran Bapak/Ibu/Saudara/i untuk memberikan doa restu pada rangkaian acara berikut:
           </p>
         </ScrollReveal>
       </div>
