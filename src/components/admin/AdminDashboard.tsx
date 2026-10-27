@@ -82,7 +82,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // New Gallery Photo State
   const [showAddGalleryModal, setShowAddGalleryModal] = useState(false);
-  const [newGalleryUrl, setNewGalleryUrl] = useState('/images/Galeri-1.jpg');
+  const [newGalleryUrl, setNewGalleryUrl] = useState('/images/gallery-exact-1.jpg');
   const [newGalleryCaption, setNewGalleryCaption] = useState('');
 
   // New Bank Account State
@@ -1411,14 +1411,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <label className="text-stone-600 block mb-1">Pilih Asset Cepat:</label>
                       <div className="grid grid-cols-4 gap-2 mb-2">
                         {[
-                          '/images/Galeri-1.jpg',
-                          '/images/Galeri-2.jpg',
-                          '/images/Galeri-3.jpg',
-                          '/images/Galeri-4.jpg',
-                          '/images/Galeri-5.jpg',
-                          '/images/Galeri-6.jpg',
-                          '/images/Awal-1.jpg',
-                          '/images/Awal-2.jpg',
+                          '/images/gallery-exact-1.jpg',
+                          '/images/gallery-exact-2.jpg',
+                          '/images/gallery-exact-3.jpg',
+                          '/images/gallery-exact-4.jpg',
+                          '/images/gallery-exact-5.jpg',
+                          '/images/groom-exact.jpg',
+                          '/images/bride-exact.jpg',
+                          '/images/cover-exact.jpg',
                         ].map((src) => (
                           <button
                             key={src}
