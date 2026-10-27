@@ -50,47 +50,9 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
   const pendingYouTubePlayRef = useRef(false);
-  const fallbackAudioActiveRef = useRef(false);
-  const youtubePlaybackActiveRef = useRef(false);
-  const fallbackTimerRef = useRef<number | null>(null);
   const youtubeVideoId = customAudioUrl.match(
     /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]+)/
   )?.[1];
-
-  const clearFallbackTimer = () => {
-    if (fallbackTimerRef.current !== null) {
-      window.clearTimeout(fallbackTimerRef.current);
-      fallbackTimerRef.current = null;
-    }
-  };
-
-  const playLocalFallback = () => {
-    const audio = audioRef.current;
-    if (!audio || fallbackAudioActiveRef.current || youtubePlaybackActiveRef.current) return;
-
-    audio.play()
-      .then(() => {
-        if (youtubePlaybackActiveRef.current) {
-          audio.pause();
-          audio.currentTime = 0;
-          return;
-        }
-        fallbackAudioActiveRef.current = true;
-        setIsPlaying(true);
-      })
-      .catch((error: unknown) => {
-        fallbackAudioActiveRef.current = false;
-        setIsPlaying(false);
-        console.error('Unable to play fallback wedding music:', error);
-      });
-  };
-
-  const startFallbackTimer = () => {
-    clearFallbackTimer();
-    fallbackTimerRef.current = window.setTimeout(() => {
-      if (pendingYouTubePlayRef.current) playLocalFallback();
-    }, 2500);
-  };
 
   const sendYouTubeCommand = (func: 'playVideo' | 'pauseVideo') => {
     if (func === 'playVideo') {
@@ -101,20 +63,17 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(
   };
 
   useEffect(() => {
-    const audio = new Audio(
-      youtubeVideoId ? '/audio/kusuma-wijaya.mp3' : customAudioUrl
-    );
-    audio.loop = true;
-    audio.preload = 'auto';
+    const audio = youtubeVideoId ? null : new Audio(customAudioUrl);
+    if (audio) {
+      audio.loop = true;
+      audio.preload = 'auto';
+    }
     audioRef.current = audio;
     pendingYouTubePlayRef.current = false;
-    fallbackAudioActiveRef.current = false;
-    youtubePlaybackActiveRef.current = false;
     setIsPlaying(false);
 
     return () => {
-      clearFallbackTimer();
-      audio.pause();
+      audio?.pause();
       audioRef.current = null;
     };
   }, [customAudioUrl, youtubeVideoId]);
@@ -134,33 +93,21 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(
           onReady: () => {
             if (pendingYouTubePlayRef.current) {
               sendYouTubeCommand('playVideo');
-              startFallbackTimer();
             }
           },
           onStateChange: (event) => {
             if (event.data === 1) {
-              clearFallbackTimer();
               pendingYouTubePlayRef.current = false;
-              youtubePlaybackActiveRef.current = true;
-              fallbackAudioActiveRef.current = false;
-              if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current.currentTime = 0;
-              }
               setIsPlaying(true);
-            } else if (event.data === 2 || event.data === 0) {
-              youtubePlaybackActiveRef.current = false;
-              setIsPlaying(fallbackAudioActiveRef.current);
-            } else if (event.data === -1 && !fallbackAudioActiveRef.current) {
-              youtubePlaybackActiveRef.current = false;
+            } else if (event.data === 0 || event.data === 2 || event.data === -1) {
+              pendingYouTubePlayRef.current = false;
               setIsPlaying(false);
             }
           },
           onError: (event) => {
             console.error('YouTube wedding music player failed:', event.data);
-            if (pendingYouTubePlayRef.current) playLocalFallback();
             pendingYouTubePlayRef.current = false;
-            youtubePlaybackActiveRef.current = false;
+            setIsPlaying(false);
           },
         },
       });
@@ -189,7 +136,6 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(
       if (youtubeWindow.onYouTubeIframeAPIReady === handleApiReady) {
         youtubeWindow.onYouTubeIframeAPIReady = previousReadyCallback;
       }
-      clearFallbackTimer();
       youtubePlayerRef.current?.destroy();
       youtubePlayerRef.current = null;
     };
@@ -202,7 +148,6 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(
         if (youtubePlayerRef.current) {
           sendYouTubeCommand('playVideo');
         }
-        startFallbackTimer();
         return;
       }
 
@@ -223,20 +168,13 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(
     if (youtubeVideoId) {
       if (isPlaying) {
         pendingYouTubePlayRef.current = false;
-        clearFallbackTimer();
         sendYouTubeCommand('pauseVideo');
-        youtubePlaybackActiveRef.current = false;
-        if (fallbackAudioActiveRef.current && audioRef.current) {
-          audioRef.current.pause();
-          fallbackAudioActiveRef.current = false;
-        }
         setIsPlaying(false);
       } else {
         pendingYouTubePlayRef.current = true;
         if (youtubePlayerRef.current) {
           sendYouTubeCommand('playVideo');
         }
-        startFallbackTimer();
       }
       return;
     }
