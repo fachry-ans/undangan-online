@@ -30,20 +30,13 @@ function setupDatabase() {
       }
     }
   });
-  SpreadsheetApp.getUi().alert('Tab Weddings, Guests, RSVPs, Wishes, dan Config sudah siap.');
+  Logger.log('Tab Weddings, Guests, RSVPs, Wishes, dan Config sudah siap.');
 }
 
 function setAdminKey() {
-  const result = SpreadsheetApp.getUi().prompt(
-    'Kunci admin undangan',
-    'Masukkan kunci rahasia yang kuat. Simpan kunci ini; nanti diminta saat membuka halaman admin.',
-    SpreadsheetApp.getUi().ButtonSet.OK_CANCEL
-  );
-  if (result.getSelectedButton() !== SpreadsheetApp.getUi().Button.OK) return;
-  const key = result.getResponseText().trim();
-  if (key.length < 20) throw new Error('Kunci admin harus minimal 20 karakter.');
-  PropertiesService.getScriptProperties().setProperty('ADMIN_KEY', key);
-  SpreadsheetApp.getUi().alert('Kunci admin tersimpan di Script Properties.');
+  const key = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
+  if (!key) throw new Error('Set ADMIN_KEY di Setelan Project > Properti Skrip terlebih dahulu.');
+  Logger.log('ADMIN_KEY sudah tersimpan di Script Properties.');
 }
 
 function doGet(e) {

@@ -9,7 +9,7 @@ https://docs.google.com/spreadsheets/d/1fakjb_1bk5JJkQQEruX2Shwo8Z8BdA4bMDQNImtZ
 1. Buka spreadsheet dengan akun pemiliknya, pilih **Ekstensi → Apps Script**.
 2. Ganti isi `Code.gs` di editor Apps Script dengan isi file di repo ini, lalu simpan.
 3. Pilih fungsi `setupDatabase` dan klik **Jalankan**. Beri izin Google yang diminta. Fungsi ini membuat tab `Weddings`, `Guests`, `RSVPs`, `Wishes`, dan `Config` serta mempertahankan isi tab yang sudah ada.
-4. Pilih fungsi `setAdminKey`, klik **Jalankan**, lalu masukkan kunci acak minimal 20 karakter. Kunci disimpan di Script Properties, bukan di source aplikasi.
+4. Di **Setelan Project → Properti Skrip**, tambahkan properti `ADMIN_KEY` dengan kunci rahasia pilihan Anda, lalu klik **Simpan properti skrip**. Jangan masukkan kunci ke source aplikasi atau GitHub. Anda dapat menjalankan `setAdminKey` dari editor untuk memastikan properti sudah tersedia; fungsi tidak mengubah atau menampilkan nilainya.
 5. Klik **Deploy → New deployment → Web app**. Set **Execute as: Me** dan **Who has access: Anyone**, lalu deploy dan salin URL Web App yang berakhiran `/exec`.
 6. URL Apps Script dipakai aplikasi publik untuk menerima RSVP/ucapan dan membaca data. Karena aksesnya publik, jangan menaruh data sensitif lain di tab tersebut. Perubahan data undangan, daftar tamu, dan penghapusan data memerlukan kunci admin.
 
