@@ -109,8 +109,10 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({
                   <option value={2}>2 Orang</option>
                   <option value={3}>3 Orang</option>
                   <option value={4}>4 Orang</option>
-                  <option value={5}>5 Orang</option>
                 </select>
+                <p className="text-[11px] text-[#70635C] font-sans">
+                  (Maksimal 4 orang per undangan)
+                </p>
               </div>
 
               <div className="space-y-1">

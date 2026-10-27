@@ -153,10 +153,10 @@ export default function App() {
         <ClosingSection wedding={wedding} />
 
         {/* 13. Floating Music Player (Kusuma Wijaya track & 4s spin animation) */}
-        {isCoverOpen && (
+        {isCoverOpen && wedding.music.enabled && (
           <MusicPlayer
-            customAudioUrl="/audio/kusuma-wijaya.mp3"
-            autoplay={true}
+            customAudioUrl={wedding.music.url || '/audio/kusuma-wijaya.mp3'}
+            autoplay={wedding.music.autoplayAfterOpen}
           />
         )}
 

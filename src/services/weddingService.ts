@@ -44,7 +44,13 @@ export class WeddingService {
           found.couple.bride?.photo === '/images/Galeri-5.jpg' &&
           found.coverPhoto === '/images/Awal-2.jpg' &&
           found.gallery?.[0]?.url === '/images/Galeri-1.jpg';
-        if (isOriginalSeed || isPreviousReferenceSeed) {
+        const isPreviousLocalSeed =
+          found?.id === DEFAULT_WEDDING.id &&
+          found.weddingDate === DEFAULT_WEDDING.weddingDate &&
+          found.couple?.groom?.fullName === DEFAULT_WEDDING.couple.groom.fullName &&
+          (found.couple.groom.photo === '/images/groom-exact.svg' ||
+            found.gallery?.[0]?.url === '/images/Galeri-1.jpg');
+        if (isOriginalSeed || isPreviousReferenceSeed || isPreviousLocalSeed) {
           const migrated = { ...DEFAULT_WEDDING, viewsCount: found.viewsCount || DEFAULT_WEDDING.viewsCount };
           this.saveWedding(migrated);
           return migrated;

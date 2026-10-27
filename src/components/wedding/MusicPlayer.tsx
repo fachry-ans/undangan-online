@@ -12,8 +12,17 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const youtubeVideoId = customAudioUrl.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]+)/
+  )?.[1];
 
   useEffect(() => {
+    if (youtubeVideoId) {
+      setIsPlaying(autoplay);
+      return;
+    }
+
     const audio = new Audio(customAudioUrl);
     audio.loop = true;
     audioRef.current = audio;
@@ -28,9 +37,22 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
     return () => {
       audio.pause();
     };
-  }, [customAudioUrl, autoplay]);
+  }, [customAudioUrl, autoplay, youtubeVideoId]);
 
   const togglePlay = () => {
+    if (youtubeVideoId) {
+      iframeRef.current?.contentWindow?.postMessage(
+        JSON.stringify({
+          event: 'command',
+          func: isPlaying ? 'pauseVideo' : 'playVideo',
+          args: [],
+        }),
+        'https://www.youtube.com'
+      );
+      setIsPlaying((playing) => !playing);
+      return;
+    }
+
     if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.pause();
@@ -45,6 +67,15 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
 
   return (
     <div id="audio-container" className="fixed bottom-5 right-5 z-40 safe-bottom">
+      {youtubeVideoId && (
+        <iframe
+          ref={iframeRef}
+          title="Wedding background music"
+          src={`https://www.youtube.com/embed/${youtubeVideoId}?enablejsapi=1&autoplay=${autoplay ? 1 : 0}&loop=1&playlist=${youtubeVideoId}&playsinline=1`}
+          allow="autoplay; encrypted-media"
+          className="absolute h-px w-px opacity-0 pointer-events-none"
+        />
+      )}
       <button
         onClick={togglePlay}
         className="relative w-11 h-11 rounded-full bg-[#632321] text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 cursor-pointer border border-[#A05C57]"
