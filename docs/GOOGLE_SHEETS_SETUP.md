@@ -10,13 +10,13 @@ https://docs.google.com/spreadsheets/d/1fakjb_1bk5JJkQQEruX2Shwo8Z8BdA4bMDQNImtZ
 2. Ganti isi `Code.gs` di editor Apps Script dengan isi file di repo ini, lalu simpan.
 3. Pilih fungsi `setupDatabase` dan klik **Jalankan**. Beri izin Google yang diminta. Fungsi ini membuat tab `Weddings`, `Guests`, `RSVPs`, `Wishes`, dan `Config` serta mempertahankan isi tab yang sudah ada.
 4. Klik **Deploy → New deployment → Web app**. Set **Execute as: Me** dan **Who has access: Anyone**, lalu deploy dan salin URL Web App yang berakhiran `/exec`.
-5. URL Apps Script dipakai aplikasi publik untuk menerima RSVP/ucapan dan membaca data. Karena aksesnya publik, jangan menaruh data sensitif lain di tab tersebut. Operasi admin di endpoint tetap dilindungi `ADMIN_KEY`; jangan menghapus pemeriksaan tersebut atau membagikan kuncinya.
+5. Endpoint Web App tanpa login mendukung undangan publik dan Admin Panel. Data tamu dan operasi edit dapat diakses siapa pun yang mengetahui URL endpoint; tombol admin yang disembunyikan bukan proteksi akses. Hindari menyimpan data sensitif, dan gunakan ini hanya jika kamu menerima risiko akses publik.
 
 ## Sambungkan aplikasi
 
 Project sudah memakai URL Web App `/exec` yang dideploy. Jika memakai deployment Apps Script lain, atur `VITE_GOOGLE_APPS_SCRIPT_URL` di `.env.local` untuk lokal dan di konfigurasi build/hosting sebelum build ulang. URL endpoint bukan kunci admin; jangan memasukkan kunci admin ke variabel frontend.
 
-Buka undangan dan klik ikon hati di footer untuk membuka spreadsheet. Akses edit spreadsheet mengikuti izin akun Google yang dibagikan oleh pemilik; tidak ada kunci admin aplikasi yang diminta. Data undangan ditampilkan di tab `Weddings` dalam kolom `data` sebagai JSON, sedangkan tamu, RSVP, dan ucapan berada di tab masing-masing. Undangan saat ini membaca data dari spreadsheet dan tidak mengunggah data lokal secara otomatis. Jika tab `Weddings` masih kosong, sinkronisasi awal perlu dilakukan melalui proses admin yang terautentikasi sebelum spreadsheet menjadi sumber data bersama.
+Buka undangan dan klik ikon hati tersembunyi di footer untuk langsung masuk ke Admin Panel tanpa password aplikasi. Jika tab `Weddings` belum memiliki data, aplikasi menyalin data lokal perangkat tersebut ke spreadsheet saat pertama kali panel admin dibuka. Setelah mengubah source Apps Script, deploy ulang versi terbaru melalui **Deploy → Manage deployments → Edit** agar perubahan endpoint aktif.
 
 Jika kode Apps Script berubah, buat **New version** di menu **Deploy → Manage deployments → Edit**, lalu deploy ulang. URL Web App yang sama dapat dipertahankan.
 

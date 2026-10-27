@@ -13,8 +13,6 @@ const STORAGE_KEYS = {
 const LEGACY_SEED_VIEW_COUNT = 342;
 const APPS_SCRIPT_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim()
   || 'https://script.google.com/macros/s/AKfycbywaWuBk3Xp-uIQXv1hsn7_YjiKeUJLKf8FAkn1x8cGYkDm-ZYsY_aWj27npOC4OQ5YFQ/exec';
-const ADMIN_KEY_STORAGE = 'elegance_admin_key';
-
 interface RemoteSnapshot {
   ok: boolean;
   error?: string;
@@ -67,13 +65,13 @@ function fetchJsonp<T>(params: Record<string, string>): Promise<T> {
   });
 }
 
-async function postMutation(action: string, data: unknown, adminKey?: string) {
+async function postMutation(action: string, data: unknown) {
   if (!APPS_SCRIPT_URL) return;
   const response = await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-    body: JSON.stringify({ action, data, adminKey }),
+    body: JSON.stringify({ action, data }),
   });
   if (response.type !== 'opaque') {
     throw new Error('Respons Apps Script tidak sesuai.');
@@ -108,7 +106,6 @@ export class WeddingService {
     const snapshot = await fetchJsonp<RemoteSnapshot>({
       action: 'snapshot',
       weddingId: slug,
-      key: sessionStorage.getItem(ADMIN_KEY_STORAGE) || '',
     });
     if (!snapshot.ok) throw new Error(snapshot.error || 'Tidak bisa membaca database spreadsheet.');
     this.remoteInitialized = true;
@@ -122,17 +119,6 @@ export class WeddingService {
     return snapshot.wedding;
   }
 
-  static async authorizeAdmin(key: string): Promise<boolean> {
-    if (!APPS_SCRIPT_URL) throw new Error('URL Apps Script belum dikonfigurasi.');
-    const result = await fetchJsonp<{ ok: boolean; authorized?: boolean; error?: string }>({
-      action: 'authorize',
-      key,
-    });
-    if (!result.ok) throw new Error(result.error || 'Gagal memeriksa kunci admin.');
-    if (result.authorized) sessionStorage.setItem(ADMIN_KEY_STORAGE, key);
-    return Boolean(result.authorized);
-  }
-
   static async syncLocalDataToSharedDatabase(slug: string): Promise<void> {
     const wedding = this.getWedding(slug);
     const data = {
@@ -141,11 +127,10 @@ export class WeddingService {
       rsvps: this.getRSVPs(wedding.id),
       wishes: this.getWishes(wedding.id),
     };
-    await postMutation('syncAll', data, sessionStorage.getItem(ADMIN_KEY_STORAGE) || undefined);
+    await postMutation('syncAll', data);
     const snapshot = await fetchJsonp<RemoteSnapshot>({
       action: 'snapshot',
       weddingId: wedding.id,
-      key: sessionStorage.getItem(ADMIN_KEY_STORAGE) || '',
     });
     if (!snapshot.ok || snapshot.wedding?.id !== wedding.id) {
       throw new Error(snapshot.error || 'Data undangan belum tersimpan ke spreadsheet.');
@@ -167,18 +152,15 @@ export class WeddingService {
     localStorage.setItem(STORAGE_KEYS.WEDDINGS, JSON.stringify(list));
   }
 
-  private static queueRemoteMutation(action: string, data: unknown, requiresAdmin = false): Promise<void> {
+  private static queueRemoteMutation(action: string, data: unknown): Promise<void> {
     if (!APPS_SCRIPT_URL || !this.remoteInitialized) return Promise.resolve();
-    const adminKey = sessionStorage.getItem(ADMIN_KEY_STORAGE) || undefined;
-    if (requiresAdmin && !adminKey) return Promise.resolve();
 
     const pending = (async () => {
-      await postMutation(action, data, adminKey);
+      await postMutation(action, data);
       const record = data as { weddingId?: string; id?: string };
       const snapshot = await fetchJsonp<RemoteSnapshot>({
         action: 'snapshot',
         weddingId: record.weddingId || this.getWedding().id,
-        key: adminKey || '',
       });
       if (!snapshot.ok) throw new Error(snapshot.error || 'Gagal memverifikasi perubahan spreadsheet.');
       const records = action.includes('Guest') ? snapshot.guests
@@ -263,7 +245,7 @@ export class WeddingService {
   static saveWedding(wedding: WeddingData): void {
     try {
       this.writeWeddingToCache(wedding);
-      void this.queueRemoteMutation('saveWedding', wedding, true).catch(reportSyncError);
+      void this.queueRemoteMutation('saveWedding', wedding).catch(reportSyncError);
     } catch (e) {
       console.error('Failed to save wedding:', e);
     }
@@ -362,7 +344,7 @@ export class WeddingService {
         const filtered = all.filter((w) => w.id !== wishId);
         localStorage.setItem(STORAGE_KEYS.WISHES, JSON.stringify(filtered));
         const deleted = all.find((wish) => wish.id === wishId);
-        if (deleted) void this.queueRemoteMutation('deleteWish', { id: wishId, weddingId: deleted.weddingId }, true).catch(reportSyncError);
+        if (deleted) void this.queueRemoteMutation('deleteWish', { id: wishId, weddingId: deleted.weddingId }).catch(reportSyncError);
       }
     } catch (e) {
       console.error('Error deleting wish:', e);
@@ -393,7 +375,7 @@ export class WeddingService {
         all.push(guest);
       }
       localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(all));
-      void this.queueRemoteMutation('saveGuest', guest, true).catch(reportSyncError);
+      void this.queueRemoteMutation('saveGuest', guest).catch(reportSyncError);
     } catch (e) {
       console.error('Error saving guest:', e);
     }
@@ -408,7 +390,7 @@ export class WeddingService {
         const filtered = all.filter((g) => g.id !== guestId);
         localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(filtered));
         const deleted = all.find((guest) => guest.id === guestId);
-        if (deleted) void this.queueRemoteMutation('deleteGuest', { id: guestId, weddingId: deleted.weddingId }, true).catch(reportSyncError);
+        if (deleted) void this.queueRemoteMutation('deleteGuest', { id: guestId, weddingId: deleted.weddingId }).catch(reportSyncError);
       }
     } catch (e) {
       console.error('Error deleting guest:', e);

@@ -33,21 +33,13 @@ function setupDatabase() {
   Logger.log('Tab Weddings, Guests, RSVPs, Wishes, dan Config sudah siap.');
 }
 
-function setAdminKey() {
-  const key = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
-  if (!key) throw new Error('Set ADMIN_KEY di Setelan Project > Properti Skrip terlebih dahulu.');
-  Logger.log('ADMIN_KEY sudah tersimpan di Script Properties.');
-}
-
 function doGet(e) {
   const action = String((e.parameter && e.parameter.action) || '');
   const callback = String((e.parameter && e.parameter.callback) || '');
   let result;
   try {
-    if (action === 'authorize') {
-      result = { ok: true, authorized: isAdminKeyValid_(e.parameter.key) };
-    } else if (action === 'snapshot') {
-      result = readSnapshot_(String(e.parameter.weddingId || ''), isAdminKeyValid_(e.parameter.key));
+    if (action === 'snapshot') {
+      result = readSnapshot_(String(e.parameter.weddingId || ''));
     } else {
       throw new Error('Aksi tidak dikenal.');
     }
@@ -77,11 +69,10 @@ function doPost(e) {
 function handleMutation_(request) {
   const action = String(request.action || '');
   const data = request.data || {};
-  const publicActions = ['submitRSVP', 'submitWish', 'incrementViews'];
-  if (publicActions.indexOf(action) < 0 && !isAdminKeyValid_(request.adminKey)) {
-    throw new Error('Kunci admin tidak valid.');
+  if (data.weddingId && data.weddingId !== 'wed-abdi-lula') {
+    throw new Error('ID undangan tidak valid.');
   }
-  if (publicActions.indexOf(action) >= 0 && data.weddingId !== 'wed-abdi-lula') {
+  if (action === 'syncAll' && (!data.wedding || data.wedding.id !== 'wed-abdi-lula')) {
     throw new Error('ID undangan tidak valid.');
   }
   if (action === 'submitRSVP') {
@@ -123,7 +114,7 @@ function handleMutation_(request) {
   return { ok: true };
 }
 
-function readSnapshot_(weddingId, includePrivateData) {
+function readSnapshot_(weddingId) {
   const weddings = readRows_('weddings').map(function (row) {
     try { return JSON.parse(row.data); } catch (error) { throw new Error('Data wedding tidak valid di spreadsheet.'); }
   });
@@ -132,18 +123,10 @@ function readSnapshot_(weddingId, includePrivateData) {
   return {
     ok: true,
     wedding: wedding,
-    guests: includePrivateData
-      ? readRows_('guests').filter(function (row) { return row.weddingId === resolvedId; })
-      : [],
+    guests: readRows_('guests').filter(function (row) { return row.weddingId === resolvedId; }),
     rsvps: readRows_('rsvps').filter(function (row) { return row.weddingId === resolvedId; })
       .map(function (row) {
-        return includePrivateData ? row : {
-          id: row.id,
-          weddingId: row.weddingId,
-          attendance: row.attendance,
-          guestCount: 0,
-          createdAt: row.createdAt,
-        };
+        return row;
       }),
     wishes: readRows_('wishes').filter(function (row) { return row.weddingId === resolvedId; }),
   };
@@ -217,11 +200,6 @@ function getSheet_(key) {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(definition.name);
   if (!sheet) throw new Error('Tab ' + definition.name + ' belum dibuat. Jalankan setupDatabase terlebih dahulu.');
   return sheet;
-}
-
-function isAdminKeyValid_(candidate) {
-  const stored = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
-  return Boolean(stored && candidate && candidate === stored);
 }
 
 function guestRow_(item) {
