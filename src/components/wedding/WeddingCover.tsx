@@ -90,7 +90,7 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
         </div>
 
         {/* Couple Names & Date with slow majestic entrance */}
-        <div className="space-y-3 z-10 my-auto">
+        <div className="space-y-3 z-10 my-auto -translate-y-[14vh] sm:-translate-y-[11vh]">
           <h1
             className="text-[46px] sm:text-[58px] font-serif text-[#FAF7F0] font-normal leading-[1.08] tracking-normal drop-shadow-md transition-all duration-1200"
             style={{

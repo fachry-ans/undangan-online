@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { WeddingData } from './types/wedding';
 import { WeddingService, applyTheme } from './services/weddingService';
 
@@ -15,7 +15,7 @@ import { WeddingGiftSection } from './components/wedding/WeddingGiftSection';
 import { RSVPSection } from './components/wedding/RSVPSection';
 import { GuestbookSection } from './components/wedding/GuestbookSection';
 import { ClosingSection } from './components/wedding/ClosingSection';
-import { MusicPlayer } from './components/wedding/MusicPlayer';
+import { MusicPlayer, MusicPlayerHandle } from './components/wedding/MusicPlayer';
 import { SakuraPetals } from './components/common/SakuraPetals';
 
 // Admin Console
@@ -27,6 +27,7 @@ export default function App() {
   const [guestName, setGuestName] = useState('Tamu Undangan');
   const [isAdminView, setIsAdminView] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const musicPlayerRef = useRef<MusicPlayerHandle>(null);
 
   // Parse guest name from URL query: ?to=Abdi+Indodana
   useEffect(() => {
@@ -63,6 +64,9 @@ export default function App() {
   const handleOpenInvitation = () => {
     const viewsCount = WeddingService.incrementViews(wedding.id);
     setWedding((current) => ({ ...current, viewsCount }));
+    if (wedding.music.enabled && wedding.music.autoplayAfterOpen) {
+      musicPlayerRef.current?.play();
+    }
     setIsCoverOpen(true);
   };
 
@@ -152,10 +156,10 @@ export default function App() {
         />
 
         {/* 13. Floating Music Player (Kusuma Wijaya track & 4s spin animation) */}
-        {isCoverOpen && wedding.music.enabled && (
+        {wedding.music.enabled && (
           <MusicPlayer
+            ref={musicPlayerRef}
             customAudioUrl={wedding.music.url || '/audio/kusuma-wijaya.mp3'}
-            autoplay={wedding.music.autoplayAfterOpen}
           />
         )}
 
