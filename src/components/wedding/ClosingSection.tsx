@@ -67,8 +67,8 @@ export const ClosingSection: React.FC<ClosingSectionProps> = ({
               type="button"
               onClick={onAdminAccess}
               className="inline-flex cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B89B63]"
-              aria-label="Admin"
-              title="Admin"
+              aria-label="Buka database Google Sheets"
+              title="Buka database Google Sheets"
             >
               <Heart className="w-3 h-3 text-[#B89B63] fill-[#B89B63]" />
             </button>

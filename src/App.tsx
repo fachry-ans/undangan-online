@@ -18,14 +18,10 @@ import { ClosingSection } from './components/wedding/ClosingSection';
 import { MusicPlayer, MusicPlayerHandle } from './components/wedding/MusicPlayer';
 import { SakuraPetals } from './components/common/SakuraPetals';
 
-// Admin Console
-import { AdminDashboard } from './components/admin/AdminDashboard';
-
 export default function App() {
   const [wedding, setWedding] = useState<WeddingData>(() => WeddingService.getWedding('abdi-lula'));
   const [isCoverOpen, setIsCoverOpen] = useState(false);
   const [guestName, setGuestName] = useState('Tamu Undangan');
-  const [isAdminView, setIsAdminView] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [syncError, setSyncError] = useState('');
   const musicPlayerRef = useRef<MusicPlayerHandle>(null);
@@ -78,7 +74,7 @@ export default function App() {
 
   // Lock scroll when cover is closed
   useEffect(() => {
-    if (!isCoverOpen && !isAdminView) {
+    if (!isCoverOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.height = '100vh';
     } else {
@@ -89,7 +85,7 @@ export default function App() {
       document.body.style.overflow = 'auto';
       document.body.style.height = 'auto';
     };
-  }, [isCoverOpen, isAdminView]);
+  }, [isCoverOpen]);
 
   const handleOpenInvitation = () => {
     const viewsCount = WeddingService.incrementViews(wedding.id);
@@ -104,74 +100,13 @@ export default function App() {
     setRefreshKey((prev) => prev + 1);
   };
 
-  const handlePreviewAsGuest = (name: string) => {
-    setGuestName(name);
-    setIsAdminView(false);
-    setIsCoverOpen(false);
-    const url = new URL(window.location.href);
-    url.searchParams.set('to', name);
-    url.searchParams.delete('view');
-    window.history.pushState({}, '', url.toString());
-  };
-
-  const handleAdminAccess = async () => {
-    if (!WeddingService.isSharedDatabaseConfigured()) {
-      window.alert('Database Google Sheets belum dikonfigurasi. Isi VITE_GOOGLE_APPS_SCRIPT_URL terlebih dahulu.');
-      return;
-    }
-    try {
-      const currentWedding = await WeddingService.initializeSharedData(wedding.slug);
-      setWedding(currentWedding);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      setSyncError(message);
-      window.alert(`Gagal membaca database: ${message}`);
-      return;
-    }
-    const key = window.prompt('Masukkan kunci admin spreadsheet:');
-    if (!key) return;
-    try {
-      const authorized = await WeddingService.authorizeAdmin(key);
-      if (!authorized) {
-        window.alert('Kunci admin tidak valid.');
-        return;
-      }
-      const authorizedWedding = await WeddingService.initializeSharedData(wedding.slug);
-      setWedding(authorizedWedding);
-      if (!WeddingService.hasSharedWedding()) {
-        await WeddingService.syncLocalDataToSharedDatabase(wedding.slug);
-        setWedding(WeddingService.getWedding(wedding.slug));
-      }
-      setSyncError('');
-      setIsAdminView(true);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      setSyncError(message);
-      window.alert(`Gagal menghubungkan database: ${message}`);
-    }
-  };
-
-  if (isAdminView) {
-    return (
-      <>
-        {syncError && (
-          <div role="alert" className="fixed top-3 left-3 right-3 z-[100] mx-auto max-w-xl rounded-xl bg-red-700 px-4 py-3 text-sm text-white shadow-lg">
-            Google Sheets: {syncError}
-            <button type="button" className="ml-3 font-bold underline" onClick={() => setSyncError('')}>Tutup</button>
-          </div>
-        )}
-        <AdminDashboard
-          onBackToInvitation={() => {
-            setIsAdminView(false);
-            const current = WeddingService.getWedding(wedding.slug);
-            setWedding(current);
-            applyTheme(current.theme);
-          }}
-          onPreviewGuest={handlePreviewAsGuest}
-        />
-      </>
+  const handleAdminAccess = () => {
+    window.open(
+      'https://docs.google.com/spreadsheets/d/1fakjb_1bk5JJkQQEruX2Shwo8Z8BdA4bMDQNImtZy4w/edit',
+      '_blank',
+      'noopener,noreferrer',
     );
-  }
+  };
 
   return (
     <div className="min-h-screen w-full relative bg-[#1E1815] bg-radial from-[#2A221E] to-[#140F0D]">
@@ -188,7 +123,7 @@ export default function App() {
         isOpen={isCoverOpen}
         onOpen={handleOpenInvitation}
       />
-      <SakuraPetals active={isCoverOpen && !isAdminView} />
+      <SakuraPetals active={isCoverOpen} />
 
       {/* 500px Center Mobile-First Container with modern luxury styling */}
       <div className="w-full max-w-[500px] mx-auto min-h-screen bg-[#FAF7F0] shadow-[0_0_80px_rgba(0,0,0,0.45)] relative overflow-x-hidden border-x border-[#E8D8BD]/50">
