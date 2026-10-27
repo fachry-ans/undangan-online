@@ -28,6 +28,16 @@ function reportSyncError(error: unknown) {
   window.dispatchEvent(new CustomEvent('wedding-sync-error', { detail: message }));
 }
 
+export function generateInvitationLink(guestName: string): string {
+  const origin = typeof window !== 'undefined'
+    ? window.location.origin
+    : 'https://undangan-online-lula-abdi.vercel.app';
+  const url = new URL('/', origin);
+  const name = guestName.trim();
+  if (name) url.searchParams.set('to', name);
+  return url.toString();
+}
+
 function fetchJsonp<T>(params: Record<string, string>): Promise<T> {
   if (!APPS_SCRIPT_URL) return Promise.reject(new Error('URL Apps Script belum dikonfigurasi.'));
 
@@ -418,8 +428,7 @@ export class WeddingService {
 
   // Generate WhatsApp Share Message
   static generateWhatsAppMessage(wedding: WeddingData, guestName: string): string {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://elegance-wedding.app';
-    const link = `${origin}/invite/${wedding.slug}?to=${encodeURIComponent(guestName)}`;
+    const link = generateInvitationLink(guestName);
     
     return `Kepada Yth.
 *${guestName}*

@@ -32,7 +32,7 @@ import {
   GalleryItem,
   BankAccount,
 } from '../../types/wedding';
-import { WeddingService, applyTheme } from '../../services/weddingService';
+import { WeddingService, applyTheme, generateInvitationLink } from '../../services/weddingService';
 import { THEME_PRESETS } from '../../data/defaultWedding';
 
 interface AdminDashboardProps {
@@ -285,12 +285,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     WeddingService.saveWedding(updated);
   };
 
-  const copyGuestLink = (guestName: string, id: string) => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const link = `${origin}/invite/${wedding.slug}?to=${encodeURIComponent(guestName)}`;
-    navigator.clipboard.writeText(link);
-    setCopiedLinkIndex(id);
-    setTimeout(() => setCopiedLinkIndex(null), 2000);
+  const copyGuestLink = async (guestName: string, id: string) => {
+    const link = generateInvitationLink(guestName);
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedLinkIndex(id);
+      setTimeout(() => setCopiedLinkIndex(null), 2000);
+    } catch (error) {
+      console.error('Unable to copy guest invitation link:', error);
+      window.alert(`Gagal menyalin tautan. Silakan salin secara manual:\n${link}`);
+    }
   };
 
   const sendWhatsApp = (guest: GuestRecord) => {
@@ -530,11 +534,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <span>Preview Undangan</span>
                 </button>
                 <button
-                  onClick={() => {
-                    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-                    const link = `${origin}/invite/${wedding.slug}?to=${encodeURIComponent(previewGuestInput)}`;
-                    navigator.clipboard.writeText(link);
-                    alert(`Tautan tersalin:\n${link}`);
+                  onClick={async () => {
+                    const link = generateInvitationLink(previewGuestInput);
+                    try {
+                      await navigator.clipboard.writeText(link);
+                      window.alert(`Tautan tersalin:\n${link}`);
+                    } catch (error) {
+                      console.error('Unable to copy invitation preview link:', error);
+                      window.alert(`Gagal menyalin tautan. Silakan salin secara manual:\n${link}`);
+                    }
                   }}
                   className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#B08A5B] text-white hover:bg-[#8C6A40] text-xs font-medium cursor-pointer"
                 >
