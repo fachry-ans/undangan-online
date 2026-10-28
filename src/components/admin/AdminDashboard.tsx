@@ -45,7 +45,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onPreviewGuest,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'general' | 'couple' | 'events' | 'story' | 'gallery' | 'gifts' | 'guests' | 'rsvps' | 'wishes' | 'theme'
+    'overview' | 'share' | 'general' | 'couple' | 'events' | 'story' | 'gallery' | 'gifts' | 'guests' | 'rsvps' | 'wishes' | 'theme'
   >('overview');
 
   const [wedding, setWedding] = useState<WeddingData>(() => WeddingService.getWedding('abdi-lula'));
@@ -54,6 +54,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [wishes, setWishes] = useState<WishRecord[]>([]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [copiedLinkIndex, setCopiedLinkIndex] = useState<string | null>(null);
+  const [shareGuestName, setShareGuestName] = useState('');
+  const [shareCopied, setShareCopied] = useState(false);
+  const [shareError, setShareError] = useState('');
 
   // New Guest Form State
   const [showAddGuestModal, setShowAddGuestModal] = useState(false);
@@ -100,6 +103,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setGuests(WeddingService.getGuests(current.id));
     setRsvps(WeddingService.getRSVPs(current.id));
     setWishes(WeddingService.getWishes(current.id));
+  };
+
+  const copyShareLink = async () => {
+    const link = generateInvitationLink(shareGuestName);
+    try {
+      await navigator.clipboard.writeText(link);
+      setShareCopied(true);
+      setShareError('');
+      window.setTimeout(() => setShareCopied(false), 2000);
+    } catch (error) {
+      console.error('Unable to copy invitation link:', error);
+      setShareCopied(false);
+      setShareError(`Tautan gagal disalin. Salin secara manual: ${link}`);
+    }
   };
 
   useEffect(() => {
@@ -362,6 +379,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <nav className="space-y-1 text-xs font-medium">
             {[
               { id: 'overview', label: 'Dashboard & Statistik', icon: Eye },
+              { id: 'share', label: 'Bagikan Undangan', icon: Share2 },
               { id: 'general', label: 'Informasi Umum', icon: Settings },
               { id: 'couple', label: 'Profil Pengantin', icon: Heart },
               { id: 'events', label: 'Jadwal Acara', icon: Calendar },
@@ -624,6 +642,84 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: GENERAL SETTINGS */}
+        {activeTab === 'share' && (
+          <div className="max-w-3xl space-y-6">
+            <div className="p-6 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-5">
+              <div>
+                <h3 className="font-serif text-xl font-bold text-stone-900">
+                  Bagikan Undangan
+                </h3>
+                <p className="mt-1 text-xs text-stone-600">
+                  Buat tautan undangan personal untuk tamu, lalu salin atau kirim melalui WhatsApp.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="admin-share-guest-name" className="block text-xs font-medium text-stone-700">
+                  Nama Tamu Undangan (Opsional)
+                </label>
+                <input
+                  id="admin-share-guest-name"
+                  type="text"
+                  value={shareGuestName}
+                  onChange={(event) => {
+                    setShareGuestName(event.target.value);
+                    setShareCopied(false);
+                    setShareError('');
+                  }}
+                  placeholder="Contoh: Bpk. Bambang & Keluarga"
+                  className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#B08A5B]"
+                />
+                <p className="text-[11px] text-stone-500">
+                  Nama tamu akan muncul otomatis di cover undangan.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="admin-share-link" className="block text-xs font-medium text-stone-700">
+                  Tautan Undangan
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    id="admin-share-link"
+                    type="text"
+                    readOnly
+                    value={generateInvitationLink(shareGuestName)}
+                    onFocus={(event) => event.currentTarget.select()}
+                    className="min-w-0 flex-1 px-3 py-2.5 rounded-lg border border-stone-300 bg-stone-50 text-xs text-stone-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void copyShareLink()}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#B08A5B] text-white hover:bg-[#8C6A40] text-xs font-medium cursor-pointer"
+                  >
+                    {shareCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    <span>{shareCopied ? 'Tersalin' : 'Salin Tautan'}</span>
+                  </button>
+                </div>
+                {shareError && (
+                  <p role="alert" className="break-all text-xs text-rose-700">
+                    {shareError}
+                  </p>
+                )}
+              </div>
+
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `Assalamu'alaikum, dengan penuh kebahagiaan kami mengundang Anda untuk hadir di pernikahan ${wedding.couple.groom.nickname} & ${wedding.couple.bride.nickname}. Silakan buka undangan berikut: ${generateInvitationLink(shareGuestName)}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-700"
+              >
+                <Share2 className="w-4 h-4" />
+                Bagikan via WhatsApp
+              </a>
             </div>
           </div>
         )}
