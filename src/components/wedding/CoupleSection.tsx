@@ -28,16 +28,16 @@ export const CoupleSection: React.FC<CoupleSectionProps> = ({ wedding }) => {
         </ScrollReveal>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-5 sm:gap-6">
         {coupleMembers.map(({ member, label, fallbackPhoto }, index) => (
           <ScrollReveal
             key={label}
-            animation={index === 0 ? 'fade-right' : 'fade-left'}
+            animation="fade-up"
             delay={200}
             duration={1200}
           >
             <article className="flex h-full flex-col items-center gap-3 rounded-2xl border border-[#E8D8BD]/80 bg-white/80 p-3 shadow-[0_10px_35px_rgba(58,48,43,0.05)] backdrop-blur-xs sm:gap-4 sm:p-5">
-              <div className="h-40 w-full max-w-[132px] rounded-t-[500px] rounded-b-xl border-2 border-[#B89B63]/40 bg-[#FAF7F0] p-1 shadow-md sm:h-52 sm:max-w-[168px] sm:p-1.5">
+              <div className="h-64 w-full max-w-[220px] rounded-t-[500px] rounded-b-xl border-2 border-[#B89B63]/40 bg-[#FAF7F0] p-1 shadow-md sm:h-72 sm:max-w-[240px] sm:p-1.5">
                 <div className="h-full w-full overflow-hidden rounded-t-[490px] rounded-b-lg">
                   <img
                     src={member.photo || fallbackPhoto}
