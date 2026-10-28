@@ -22,7 +22,7 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
 
   useEffect(() => {
     // Initial staggered entry animation
-    const timer = setTimeout(() => setIsReady(true), 100);
+    const timer = setTimeout(() => setIsReady(true), 150);
     return () => clearTimeout(timer);
   }, []);
 
@@ -31,7 +31,7 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
       setAnimatingOut(true);
       const timer = setTimeout(() => {
         setIsRendered(false);
-      }, 1000); // 1.0s slow majestic exit
+      }, 1500);
       return () => clearTimeout(timer);
     } else {
       setIsRendered(true);
@@ -47,7 +47,7 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
   return (
     <div
       id="wedding-cover"
-      className="fixed inset-0 z-50 flex items-center justify-center transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]"
+      className="fixed inset-0 z-50 flex items-center justify-center transition-all duration-1500 ease-[cubic-bezier(0.16,1,0.3,1)]"
       style={{
         backgroundColor: '#1E1815',
         opacity: animatingOut ? 0 : 1,
@@ -71,11 +71,11 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
       >
         {/* Top Ornament Arch Accent */}
         <div
-          className="transition-all duration-1000 pt-6 z-10 flex flex-col items-center"
+          className="transition-all duration-1400 pt-6 z-10 flex flex-col items-center"
           style={{
             opacity: isReady ? 1 : 0,
             transform: isReady ? 'translateY(0)' : 'translateY(-20px)',
-            transitionDelay: '200ms',
+            transitionDelay: '250ms',
           }}
         >
           <div className="flex items-center gap-2 mb-2 text-[#B89B63]">
@@ -92,22 +92,22 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
         {/* Couple Names & Date with slow majestic entrance */}
         <div className="space-y-3 z-10 my-auto -translate-y-[14vh] sm:-translate-y-[11vh]">
           <h1
-            className="text-[46px] sm:text-[58px] font-serif text-[#FAF7F0] font-normal leading-[1.08] tracking-normal drop-shadow-md transition-all duration-1200"
+            className="text-[46px] sm:text-[58px] font-serif text-[#FAF7F0] font-normal leading-[1.08] tracking-normal drop-shadow-md transition-all duration-1600"
             style={{
               opacity: isReady ? 1 : 0,
               transform: isReady ? 'scale(1)' : 'scale(0.92)',
-              transitionDelay: '400ms',
+              transitionDelay: '500ms',
             }}
           >
             {groomName} &amp; {brideName}
           </h1>
 
           <div
-            className="flex items-center justify-center gap-3 pt-1 transition-all duration-1000"
+            className="flex items-center justify-center gap-3 pt-1 transition-all duration-1400"
             style={{
               opacity: isReady ? 1 : 0,
               transform: isReady ? 'translateY(0)' : 'translateY(15px)',
-              transitionDelay: '600ms',
+              transitionDelay: '750ms',
             }}
           >
             <div className="h-[1px] w-10 bg-[#B89B63]/60" />
@@ -122,11 +122,11 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
         <div className="w-full max-w-xs space-y-5 mb-6 z-10 flex flex-col items-center">
           {/* Frosted Guest Badge */}
           <div
-            className="w-full px-5 py-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-[#E8D8BD]/30 shadow-lg space-y-1 transition-all duration-1000"
+            className="w-full px-5 py-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-[#E8D8BD]/30 shadow-lg space-y-1 transition-all duration-1400"
             style={{
               opacity: isReady ? 1 : 0,
               transform: isReady ? 'translateY(0)' : 'translateY(20px)',
-              transitionDelay: '800ms',
+              transitionDelay: '1000ms',
             }}
           >
             <p className="text-[11px] sm:text-[12px] font-medium tracking-[2px] text-[#E8D8BD]/80 uppercase">
@@ -144,17 +144,17 @@ export const WeddingCover: React.FC<WeddingCoverProps> = ({
           <button
             id="btn-open-invitation"
             onClick={onOpen}
-            className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full text-white text-[13px] tracking-[2px] uppercase font-medium shadow-2xl hover:shadow-[0_0_25px_rgba(184,155,99,0.5)] active:scale-95 transition-all duration-1000 cursor-pointer overflow-hidden btn-luxury-gradient hover:scale-105"
+            className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full text-white text-[13px] tracking-[2px] uppercase font-medium shadow-2xl hover:shadow-[0_0_25px_rgba(184,155,99,0.5)] active:scale-95 transition-all duration-1400 cursor-pointer overflow-hidden btn-luxury-gradient hover:scale-105"
             style={{
               opacity: isReady ? 1 : 0,
               transform: isReady ? 'translateY(0)' : 'translateY(25px)',
-              transitionDelay: '1000ms',
+              transitionDelay: '1250ms',
             }}
           >
             <MailOpen className="w-4 h-4 transition-transform group-hover:scale-110 text-[#FAF7F0]" />
             <span className="font-semibold text-[#FAF7F0]">Buka Undangan</span>
             {/* Shimmer light sweep */}
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full duration-1000 bg-gradient-to-r from-transparent via-white/25 to-transparent transition-all pointer-events-none" />
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full duration-1400 bg-gradient-to-r from-transparent via-white/25 to-transparent transition-all pointer-events-none" />
           </button>
         </div>
       </div>

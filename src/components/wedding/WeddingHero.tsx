@@ -19,7 +19,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({ wedding }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       setSlideIndex((prev) => (prev + 1) % slides.length);
-    }, 4000);
+    }, 6000);
     return () => clearInterval(timer);
   }, [slides.length]);
 
@@ -77,7 +77,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({ wedding }) => {
                 key={src}
                 src={src}
                 alt={`Abdi & Lula Prewedding ${i + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1200 ease-in-out ${
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1800 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   slideIndex === i ? 'opacity-100 scale-100' : 'opacity-0 scale-108'
                 }`}
               />

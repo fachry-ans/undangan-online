@@ -26,7 +26,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   animation = 'fade-up',
   delay = 0,
-  duration = 900,
+  duration = 1200,
   threshold = 0.05,
   className = '',
   style = {},
@@ -172,7 +172,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   const transitionStyle: React.CSSProperties = {
     transitionProperty: 'opacity, transform, filter, clip-path',
-    transitionDuration: `${duration}ms`,
+    transitionDuration: `${Math.round(duration * 1.3)}ms`,
     transitionDelay: `${delay}ms`,
     transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
     willChange: 'opacity, transform, filter, clip-path',
