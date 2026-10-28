@@ -183,11 +183,11 @@ export default function App() {
         {/* 4. Groom & Bride Section (Benno Ramadhan & Rara Kirana, Arched portraits, &) */}
         <CoupleSection wedding={wedding} />
 
-        {/* 5. Countdown Section (Counting background, Save the date, 4 boxes, divider, calendar) */}
-        <CountdownSection wedding={wedding} />
-
-        {/* 6. Wedding Event Agenda (Akad Nikah & Resepsi with Malang venue & Open Maps) */}
+        {/* 5. Wedding Event Agenda (Akad Nikah & Resepsi with Malang venue & Open Maps) */}
         <EventSection wedding={wedding} />
+
+        {/* 6. Countdown Section (Counting background, Save the date, 4 boxes, divider, calendar) */}
+        <CountdownSection wedding={wedding} />
 
         {/* 7. Love Story Timeline */}
         <LoveStorySection wedding={wedding} />
