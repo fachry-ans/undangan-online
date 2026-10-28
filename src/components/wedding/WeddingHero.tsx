@@ -69,7 +69,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({ wedding }) => {
       </div>
 
       {/* Modern Architectural Arch Photo Card with Smooth Crossfade */}
-      <ScrollReveal animation="fade-up" delay={800} duration={1200} className="w-full">
+      <ScrollReveal animation="image-reveal" delay={500} duration={1300} className="w-full">
         <div className="relative w-60 sm:w-68 h-84 sm:h-96 mx-auto my-6 p-2 rounded-t-[500px] rounded-b-2xl border-2 border-[#B89B63]/40 bg-white/60 shadow-xl backdrop-blur-xs">
           <div className="relative w-full h-full overflow-hidden rounded-t-[490px] rounded-b-xl">
             {slides.map((src, i) => (

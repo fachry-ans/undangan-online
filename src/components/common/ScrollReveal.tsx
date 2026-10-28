@@ -8,7 +8,8 @@ export type AnimationType =
   | 'zoom-in'
   | 'zoom-out'
   | 'blur-up'
-  | 'flip-up';
+  | 'flip-up'
+  | 'image-reveal';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   animation = 'fade-up',
   delay = 0,
-  duration = 1200, // Slow, elegant motion matching Leafitation Elementor
+  duration = 900,
   threshold = 0.05,
   className = '',
   style = {},
@@ -37,6 +38,11 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIsVisible(true);
+      return;
+    }
 
     // Check if element is already in viewport on mount (e.g. top sections)
     const rect = element.getBoundingClientRect();
@@ -73,14 +79,14 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       case 'fade-up':
         return {
           opacity: 0,
-          transform: 'translate3d(0, 48px, 0)',
-          filter: 'blur(3px)',
+          transform: 'translate3d(0, 30px, 0)',
+          filter: 'blur(6px)',
         };
       case 'fade-down':
         return {
           opacity: 0,
-          transform: 'translate3d(0, -48px, 0)',
-          filter: 'blur(3px)',
+          transform: 'translate3d(0, -30px, 0)',
+          filter: 'blur(6px)',
         };
       case 'fade-left':
         return {
@@ -112,6 +118,12 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
         return {
           opacity: 0,
           transform: 'perspective(1000px) rotateX(25deg) translate3d(0, 30px, 0)',
+        };
+      case 'image-reveal':
+        return {
+          opacity: 0,
+          clipPath: 'inset(10% 0 0)',
+          transform: 'scale3d(1.035, 1.035, 1)',
         };
       default:
         return { opacity: 0 };
@@ -147,17 +159,23 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
           opacity: 1,
           transform: 'perspective(1000px) rotateX(0deg) translate3d(0, 0, 0)',
         };
+      case 'image-reveal':
+        return {
+          opacity: 1,
+          clipPath: 'inset(0)',
+          transform: 'scale3d(1, 1, 1)',
+        };
       default:
         return { opacity: 1 };
     }
   };
 
   const transitionStyle: React.CSSProperties = {
-    transitionProperty: 'opacity, transform, filter',
+    transitionProperty: 'opacity, transform, filter, clip-path',
     transitionDuration: `${duration}ms`,
     transitionDelay: `${delay}ms`,
-    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)', // Smooth ease-out
-    willChange: 'opacity, transform, filter',
+    transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+    willChange: 'opacity, transform, filter, clip-path',
   };
 
   return (
