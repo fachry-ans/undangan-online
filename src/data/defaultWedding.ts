@@ -184,7 +184,7 @@ export const DEFAULT_WEDDING: WeddingData = {
   music: {
     title: 'Wedding Romantic Song',
     artist: 'Pilihan Pengantin (YouTube)',
-    url: 'https://www.youtube.com/watch?v=hXNSqTEz-eQ',
+    url: 'https://www.youtube.com/watch?v=ipBCtl0j4O8',
     autoplayAfterOpen: true,
     enabled: true,
   },
