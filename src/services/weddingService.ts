@@ -427,23 +427,23 @@ export class WeddingService {
   }
 
   // Generate WhatsApp Share Message
-  static generateWhatsAppMessage(wedding: WeddingData, guestName: string): string {
+  static generateWhatsAppMessage(guestName: string): string {
     const link = generateInvitationLink(guestName);
-    
-    return `Kepada Yth.
-*${guestName}*
+    const recipientName = guestName.trim() || 'Tamu Undangan';
 
-Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami:
+    return `Assalamu'alaikum warahmatullahi wabarakatuh
 
-*${wedding.couple.groom.nickname} & ${wedding.couple.bride.nickname}*
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i ${recipientName} untuk menghadiri acara kami.
 
-Berikut tautan undangan kami untuk informasi lengkap acara:
+Untuk info lengkap dari acara bisa kunjungi :
+
 ${link}
 
-Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
 
-Terima kasih.
-Salam hangat,
-*${wedding.couple.groom.nickname} & ${wedding.couple.bride.nickname}*`;
+Terima kasih banyak atas perhatiannya.
+
+Salam Hormat
+Lula & Abdi`;
   }
 }
