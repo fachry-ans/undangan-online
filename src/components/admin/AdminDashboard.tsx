@@ -2041,50 +2041,97 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="p-6 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-6">
             <div>
               <h3 className="font-serif text-xl font-bold text-stone-900">
-                Sistem Tema &amp; Palet Warna
+                Ganti Tema Undangan
               </h3>
               <p className="text-xs text-stone-600">
-                Pilih tema preset yang elegan atau sesuaikan token CSS variables secara langsung.
+                Pilih tema dan lihat contoh tampilannya. Klik Simpan Perubahan agar pilihan diterapkan ke undangan publik.
               </p>
             </div>
 
             {/* Presets Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div role="radiogroup" aria-label="Pilih tema undangan" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Object.values(THEME_PRESETS).map((preset) => {
                 const isSelected = wedding.theme.id === preset.id;
 
                 return (
-                  <div
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
                     key={preset.id}
                     onClick={() => {
                       setWedding({ ...wedding, theme: preset });
                       applyTheme(preset);
                     }}
-                    className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                    className={`relative p-4 rounded-2xl border-2 text-left cursor-pointer transition-all ${
                       isSelected
                         ? 'border-[#B08A5B] bg-[#FFFDF9] shadow-md'
                         : 'border-stone-200 hover:border-stone-300 bg-white'
                     }`}
                   >
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-4">
                       <div
-                        className="w-5 h-5 rounded-full border border-stone-300"
+                        className="w-8 h-8 rounded-full border border-stone-300 shadow-sm"
                         style={{ backgroundColor: preset.primaryColor }}
+                        title="Warna utama"
                       />
                       <div
-                        className="w-5 h-5 rounded-full border border-stone-300"
+                        className="w-8 h-8 rounded-full border border-stone-300 shadow-sm"
                         style={{ backgroundColor: preset.backgroundColor }}
+                        title="Warna latar"
                       />
                       <div
-                        className="w-5 h-5 rounded-full border border-stone-300"
+                        className="w-8 h-8 rounded-full border border-stone-300 shadow-sm"
+                        style={{ backgroundColor: preset.textColor }}
+                        title="Warna teks"
+                      />
+                      <div
+                        className="w-8 h-8 rounded-full border border-stone-300 shadow-sm"
                         style={{ backgroundColor: preset.goldColor }}
+                        title="Warna aksen"
                       />
                     </div>
-                    <h4 className="font-semibold text-xs text-stone-900">{preset.name}</h4>
-                    <p className="text-[10px] text-stone-500 mt-1">
-                      Font: {preset.fontFamily}
-                    </p>
-                  </div>
+                    <span className="block font-semibold text-sm text-stone-900">{preset.name}</span>
+                    <span className="block text-[11px] text-stone-500 mt-1 capitalize">
+                      Font {preset.fontFamily === 'display' ? 'display' : preset.fontFamily}
+                    </span>
+                    <span
+                      className="mt-4 block rounded-xl border border-stone-200 p-3"
+                      style={{ backgroundColor: preset.backgroundColor, color: preset.textColor }}
+                    >
+                      <span
+                        className="block text-[9px] uppercase tracking-[2px]"
+                        style={{ color: preset.goldColor }}
+                      >
+                        The Wedding Of
+                      </span>
+                      <span
+                        className="mt-1 block font-serif text-lg"
+                        style={{
+                          color: preset.textColor,
+                          fontFamily: preset.fontFamily === 'display'
+                            ? '"Cormorant Garamond", Georgia, serif'
+                            : preset.fontFamily === 'sans'
+                              ? '"Plus Jakarta Sans", sans-serif'
+                              : '"Playfair Display", Georgia, serif',
+                        }}
+                      >
+                        Nama Pasangan
+                      </span>
+                      <span
+                        className="mt-2 inline-block rounded-full px-3 py-1 text-[9px] text-white"
+                        style={{ backgroundColor: preset.primaryColor }}
+                      >
+                        Lihat Undangan
+                      </span>
+                    </span>
+                    {isSelected && (
+                      <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-[#B08A5B]/10 px-2 py-1 text-[10px] font-semibold text-[#8C6A40]">
+                        <Check className="h-3 w-3" />
+                        Dipilih
+                      </span>
+                    )}
+                  </button>
                 );
               })}
             </div>

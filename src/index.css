@@ -32,6 +32,57 @@
   --theme-muted: #70635C;
   --theme-gold: #B89B63;
   --theme-bg-desktop: #221D1A;
+  --theme-font-family: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+}
+
+.wedding-theme-scope {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+.wedding-theme-scope .font-serif,
+.wedding-theme-scope .font-display {
+  font-family: var(--theme-font-family);
+}
+
+.wedding-theme-scope [class*="text-[#3A302B]"] {
+  color: var(--theme-text) !important;
+}
+
+.wedding-theme-scope [class*="text-[#70635C]"] {
+  color: var(--theme-muted) !important;
+}
+
+.wedding-theme-scope [class*="text-[#B89B63]"] {
+  color: var(--theme-gold) !important;
+}
+
+.wedding-theme-scope [class*="text-[#B08A5B]"] {
+  color: var(--theme-primary) !important;
+}
+
+.wedding-theme-scope [class*="bg-[#FAF7F0]"] {
+  background-color: var(--theme-bg) !important;
+}
+
+.wedding-theme-scope [class*="bg-[#F3EFE6]"] {
+  background-color: var(--theme-surface) !important;
+}
+
+.wedding-theme-scope [class*="bg-white"] {
+  background-color: var(--theme-card) !important;
+}
+
+.wedding-theme-scope [class*="bg-[#E8D8BD]"] {
+  background-color: color-mix(in srgb, var(--theme-primary-light) 40%, transparent) !important;
+}
+
+.wedding-theme-scope [class*="border-[#E8D8BD]"] {
+  border-color: color-mix(in srgb, var(--theme-primary-light) 80%, transparent) !important;
+}
+
+.wedding-theme-scope [class*="border-[#B89B63]"] {
+  border-color: color-mix(in srgb, var(--theme-gold) 40%, transparent) !important;
 }
 
 html {
@@ -151,7 +202,7 @@ html {
 
 /* Luxury button gradient */
 .btn-leaf-gradient, .btn-luxury-gradient {
-  background: linear-gradient(135deg, #B89B63 0%, #8E733D 100%);
+  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-dark) 100%);
   color: #FFFFFF;
 }
 

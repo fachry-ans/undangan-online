@@ -173,7 +173,7 @@ export default function App() {
       <SakuraPetals active={isCoverOpen && !isAdminView} />
 
       {/* 500px Center Mobile-First Container with modern luxury styling */}
-      <div className="w-full max-w-[500px] mx-auto min-h-screen bg-[#FAF7F0] shadow-[0_0_80px_rgba(0,0,0,0.45)] relative overflow-x-hidden border-x border-[#E8D8BD]/50">
+      <div data-wedding-theme={wedding.theme.id} className="wedding-theme-scope w-full max-w-[500px] mx-auto min-h-screen bg-[#FAF7F0] shadow-[0_0_80px_rgba(0,0,0,0.45)] relative overflow-x-hidden border-x border-[#E8D8BD]/50">
         {/* 2. Main Hero Section (Kembar Mayang, The Wedding Of, Rara & Benno, Arched Slideshow) */}
         <WeddingHero wedding={wedding} />
 

@@ -101,6 +101,14 @@ export function applyTheme(theme: ThemeConfig) {
   root.style.setProperty('--theme-text', theme.textColor);
   root.style.setProperty('--theme-muted', theme.mutedColor);
   root.style.setProperty('--theme-gold', theme.goldColor);
+  root.style.setProperty(
+    '--theme-font-family',
+    theme.fontFamily === 'display'
+      ? '"Cormorant Garamond", Georgia, serif'
+      : theme.fontFamily === 'sans'
+        ? '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+        : '"Playfair Display", "Cormorant Garamond", Georgia, serif'
+  );
 }
 
 export class WeddingService {
