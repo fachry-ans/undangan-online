@@ -11,6 +11,7 @@ const STORAGE_KEYS = {
 };
 
 const LEGACY_SEED_VIEW_COUNT = 342;
+const PREVIOUS_DEFAULT_MUSIC_URL = 'https://www.youtube.com/watch?v=ipBCtl0j4O8';
 const APPS_SCRIPT_URL = import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL?.trim()
   || 'https://script.google.com/macros/s/AKfycbywaWuBk3Xp-uIQXv1hsn7_YjiKeUJLKf8FAkn1x8cGYkDm-ZYsY_aWj27npOC4OQ5YFQ/exec';
 interface RemoteSnapshot {
@@ -20,6 +21,22 @@ interface RemoteSnapshot {
   guests: GuestRecord[];
   rsvps: RSVPRecord[];
   wishes: WishRecord[];
+}
+
+function migrateDefaultMusic(wedding: WeddingData): WeddingData {
+  if (wedding.id !== DEFAULT_WEDDING.id || wedding.music?.url !== PREVIOUS_DEFAULT_MUSIC_URL) {
+    return wedding;
+  }
+
+  return {
+    ...wedding,
+    music: {
+      ...wedding.music,
+      title: DEFAULT_WEDDING.music.title,
+      artist: DEFAULT_WEDDING.music.artist,
+      url: DEFAULT_WEDDING.music.url,
+    },
+  };
 }
 
 function reportSyncError(error: unknown) {
@@ -126,15 +143,19 @@ export class WeddingService {
       weddingId: slug,
     });
     if (!snapshot.ok) throw new Error(snapshot.error || 'Tidak bisa membaca database spreadsheet.');
+    const wedding = snapshot.wedding ? migrateDefaultMusic(snapshot.wedding) : null;
     this.remoteInitialized = true;
     this.sharedWeddingExists = Boolean(snapshot.wedding);
 
-    if (!snapshot.wedding) return this.getWedding(slug);
-    this.writeWeddingToCache(snapshot.wedding);
+    if (!wedding) return this.getWedding(slug);
+    this.writeWeddingToCache(wedding);
     localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(snapshot.guests));
     localStorage.setItem(STORAGE_KEYS.RSVPS, JSON.stringify(snapshot.rsvps));
     localStorage.setItem(STORAGE_KEYS.WISHES, JSON.stringify(snapshot.wishes));
-    return snapshot.wedding;
+    if (wedding !== snapshot.wedding) {
+      void this.queueRemoteMutation('saveWedding', wedding).catch(reportSyncError);
+    }
+    return wedding;
   }
 
   static async syncLocalDataToSharedDatabase(slug: string): Promise<void> {
@@ -251,7 +272,11 @@ export class WeddingService {
           this.saveWedding(migrated);
           return migrated;
         }
-        if (found && found.couple?.groom?.nickname === 'Abdi') return found;
+        if (found && found.couple?.groom?.nickname === 'Abdi') {
+          const migrated = migrateDefaultMusic(found);
+          if (migrated !== found) this.saveWedding(migrated);
+          return migrated;
+        }
       }
     } catch {
       // Fallback

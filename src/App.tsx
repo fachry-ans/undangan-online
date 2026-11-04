@@ -218,7 +218,7 @@ export default function App() {
           onAdminAccess={handleAdminAccess}
         />
 
-        {/* 13. Floating Music Player (Kusuma Wijaya track & 4s spin animation) */}
+        {/* 13. Floating YouTube music player */}
         {wedding.music.enabled && (
           <MusicPlayer
             ref={musicPlayerRef}

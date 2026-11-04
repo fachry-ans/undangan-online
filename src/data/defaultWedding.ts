@@ -238,9 +238,9 @@ export const DEFAULT_WEDDING: WeddingData = {
     notes: 'Harap konfirmasi terlebih dahulu sebelum pengiriman kado fisik.',
   },
   music: {
-    title: 'Wedding Romantic Song',
-    artist: 'Pilihan Pengantin (YouTube)',
-    url: 'https://www.youtube.com/watch?v=ipBCtl0j4O8',
+    title: 'Until I Found You',
+    artist: 'Stephen Sanchez',
+    url: 'https://www.youtube.com/watch?v=GxldQ9eX2wo',
     autoplayAfterOpen: true,
     enabled: true,
   },
