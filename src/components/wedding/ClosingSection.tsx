@@ -5,13 +5,9 @@ import { ScrollReveal } from '../common/ScrollReveal';
 
 interface ClosingSectionProps {
   wedding: WeddingData;
-  onAdminAccess: () => void;
 }
 
-export const ClosingSection: React.FC<ClosingSectionProps> = ({
-  wedding,
-  onAdminAccess,
-}) => {
+export const ClosingSection: React.FC<ClosingSectionProps> = ({ wedding }) => {
   const groomName = wedding.couple?.groom?.nickname || 'Abdi';
   const brideName = wedding.couple?.bride?.nickname || 'Lula';
 
@@ -63,15 +59,9 @@ export const ClosingSection: React.FC<ClosingSectionProps> = ({
           </div>
           <div className="flex items-center justify-center gap-1 text-[11px] text-[#70635C] font-sans">
             <span>Made with</span>
-            <button
-              type="button"
-              onClick={onAdminAccess}
-              className="inline-flex cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B89B63]"
-              aria-label="Buka Admin Panel"
-              title="Admin"
-            >
+            <span aria-label="love" className="inline-flex">
               <Heart className="w-3 h-3 text-[#B89B63] fill-[#B89B63]" />
-            </button>
+            </span>
             <span>for their special day</span>
           </div>
           <p className="text-[11px] text-[#70635C] font-sans">

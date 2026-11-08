@@ -34,6 +34,7 @@ import {
 } from '../../types/wedding';
 import { WeddingService, applyTheme, generateInvitationLink } from '../../services/weddingService';
 import { THEME_PRESETS } from '../../data/defaultWedding';
+import { getGoogleDriveImageUrl } from '../../utils/googleDrive';
 
 interface AdminDashboardProps {
   onBackToInvitation: () => void;
@@ -244,7 +245,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const newItem: GalleryItem = {
       id: `gal-${Date.now()}`,
       mediaType: 'image',
-      url: newGalleryUrl.trim(),
+      url: getGoogleDriveImageUrl(newGalleryUrl.trim()),
       caption: newGalleryCaption.trim() || undefined,
     };
 
@@ -1472,7 +1473,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 >
                   <div className="aspect-3/4 w-full bg-stone-100 overflow-hidden relative">
                     <img
-                      src={item.url}
+                      src={getGoogleDriveImageUrl(item.url)}
                       alt={item.caption || `Galeri ${index + 1}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -1542,9 +1543,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         required
                         value={newGalleryUrl}
                         onChange={(e) => setNewGalleryUrl(e.target.value)}
-                        placeholder="/images/foto.jpg atau https://..."
+                        placeholder="/images/foto.jpg atau tautan Google Drive"
                         className="w-full px-3 py-2 rounded-lg border border-stone-300 text-sm font-mono text-xs"
                       />
+                      <p className="mt-1 text-[10px] text-stone-500">
+                        Tautan Drive /file/d/.../view didukung. Pastikan akses file diatur ke siapa pun yang memiliki link.
+                      </p>
                     </div>
                     <div>
                       <label className="text-stone-600 block mb-1">Caption Foto (Opsional)</label>

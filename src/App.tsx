@@ -109,6 +109,7 @@ export default function App() {
     const url = new URL(window.location.href);
     url.searchParams.set('to', name);
     url.searchParams.delete('view');
+    url.hash = '';
     window.history.pushState({}, '', url.toString());
   };
 
@@ -133,6 +134,18 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    const openAdminFromHash = () => {
+      if (window.location.hash === '#admin') {
+        void handleAdminAccess();
+      }
+    };
+
+    openAdminFromHash();
+    window.addEventListener('hashchange', openAdminFromHash);
+    return () => window.removeEventListener('hashchange', openAdminFromHash);
+  }, [wedding.slug]);
+
   if (isAdminView) {
     return (
       <>
@@ -145,6 +158,9 @@ export default function App() {
         <AdminDashboard
           onBackToInvitation={() => {
             setIsAdminView(false);
+            const url = new URL(window.location.href);
+            url.hash = '';
+            window.history.replaceState({}, '', url.toString());
             const current = WeddingService.getWedding(wedding.slug);
             setWedding(current);
             applyTheme(current.theme);
@@ -215,7 +231,6 @@ export default function App() {
         {/* 12. Footer & Closing Blessing (Gunungan Wayang Jawa & Leafitation credits) */}
         <ClosingSection
           wedding={wedding}
-          onAdminAccess={handleAdminAccess}
         />
 
         {/* 13. Floating YouTube music player */}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { WeddingData } from '../../types/wedding';
 import { ScrollReveal } from '../common/ScrollReveal';
+import { getGoogleDriveImageUrl } from '../../utils/googleDrive';
 
 interface GallerySectionProps {
   wedding: WeddingData;
@@ -20,7 +21,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ wedding }) => {
 
   const galleryItems =
     wedding.gallery && wedding.gallery.length > 0
-      ? wedding.gallery.map((g) => g.url)
+      ? wedding.gallery.map((g) => getGoogleDriveImageUrl(g.url))
       : fallbackImages;
 
   return (
