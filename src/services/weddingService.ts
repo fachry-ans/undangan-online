@@ -131,6 +131,7 @@ export function applyTheme(theme: ThemeConfig) {
 export class WeddingService {
   private static remoteInitialized = false;
   private static sharedWeddingExists = false;
+  private static sharedDataRequests = new Map<string, Promise<WeddingData>>();
 
   static isSharedDatabaseConfigured(): boolean {
     return Boolean(APPS_SCRIPT_URL);
@@ -138,24 +139,38 @@ export class WeddingService {
 
   static async initializeSharedData(slug: string): Promise<WeddingData> {
     if (!APPS_SCRIPT_URL) return this.getWedding(slug);
-    const snapshot = await fetchJsonp<RemoteSnapshot>({
-      action: 'snapshot',
-      weddingId: slug,
-    });
-    if (!snapshot.ok) throw new Error(snapshot.error || 'Tidak bisa membaca database spreadsheet.');
-    const wedding = snapshot.wedding ? migrateDefaultMusic(snapshot.wedding) : null;
-    this.remoteInitialized = true;
-    this.sharedWeddingExists = Boolean(snapshot.wedding);
+    const existingRequest = this.sharedDataRequests.get(slug);
+    if (existingRequest) return existingRequest;
 
-    if (!wedding) return this.getWedding(slug);
-    this.writeWeddingToCache(wedding);
-    localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(snapshot.guests));
-    localStorage.setItem(STORAGE_KEYS.RSVPS, JSON.stringify(snapshot.rsvps));
-    localStorage.setItem(STORAGE_KEYS.WISHES, JSON.stringify(snapshot.wishes));
-    if (wedding !== snapshot.wedding) {
-      void this.queueRemoteMutation('saveWedding', wedding).catch(reportSyncError);
+    const request = (async () => {
+      const snapshot = await fetchJsonp<RemoteSnapshot>({
+        action: 'snapshot',
+        weddingId: slug,
+      });
+      if (!snapshot.ok) throw new Error(snapshot.error || 'Tidak bisa membaca database spreadsheet.');
+      const wedding = snapshot.wedding ? migrateDefaultMusic(snapshot.wedding) : null;
+      this.remoteInitialized = true;
+      this.sharedWeddingExists = Boolean(snapshot.wedding);
+
+      if (!wedding) return this.getWedding(slug);
+      this.writeWeddingToCache(wedding);
+      localStorage.setItem(STORAGE_KEYS.GUESTS, JSON.stringify(snapshot.guests));
+      localStorage.setItem(STORAGE_KEYS.RSVPS, JSON.stringify(snapshot.rsvps));
+      localStorage.setItem(STORAGE_KEYS.WISHES, JSON.stringify(snapshot.wishes));
+      if (wedding !== snapshot.wedding) {
+        void this.queueRemoteMutation('saveWedding', wedding).catch(reportSyncError);
+      }
+      return wedding;
+    })();
+
+    this.sharedDataRequests.set(slug, request);
+    try {
+      return await request;
+    } finally {
+      if (this.sharedDataRequests.get(slug) === request) {
+        this.sharedDataRequests.delete(slug);
+      }
     }
-    return wedding;
   }
 
   static async syncLocalDataToSharedDatabase(slug: string): Promise<void> {
