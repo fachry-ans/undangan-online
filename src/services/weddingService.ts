@@ -92,6 +92,19 @@ function fetchJsonp<T>(params: Record<string, string>): Promise<T> {
   });
 }
 
+async function fetchSnapshot(params: Record<string, string>): Promise<RemoteSnapshot> {
+  if (import.meta.env.DEV) return fetchJsonp<RemoteSnapshot>(params);
+
+  const url = new URL('/api/wedding', window.location.origin);
+  Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+  const response = await fetch(url);
+  const snapshot = await response.json() as RemoteSnapshot;
+  if (!response.ok || !snapshot.ok) {
+    throw new Error(snapshot.error || 'Tidak bisa membaca database spreadsheet.');
+  }
+  return snapshot;
+}
+
 async function postMutation(action: string, data: unknown) {
   if (!APPS_SCRIPT_URL) return;
   const response = await fetch(APPS_SCRIPT_URL, {
@@ -143,11 +156,10 @@ export class WeddingService {
     if (existingRequest) return existingRequest;
 
     const request = (async () => {
-      const snapshot = await fetchJsonp<RemoteSnapshot>({
+      const snapshot = await fetchSnapshot({
         action: 'snapshot',
         weddingId: slug,
       });
-      if (!snapshot.ok) throw new Error(snapshot.error || 'Tidak bisa membaca database spreadsheet.');
       const wedding = snapshot.wedding ? migrateDefaultMusic(snapshot.wedding) : null;
       this.remoteInitialized = true;
       this.sharedWeddingExists = Boolean(snapshot.wedding);
@@ -182,7 +194,7 @@ export class WeddingService {
       wishes: this.getWishes(wedding.id),
     };
     await postMutation('syncAll', data);
-    const snapshot = await fetchJsonp<RemoteSnapshot>({
+    const snapshot = await fetchSnapshot({
       action: 'snapshot',
       weddingId: wedding.id,
     });

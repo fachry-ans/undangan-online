@@ -16,7 +16,9 @@ https://docs.google.com/spreadsheets/d/1fakjb_1bk5JJkQQEruX2Shwo8Z8BdA4bMDQNImtZ
 
 Project sudah memakai URL Web App `/exec` yang dideploy. Jika memakai deployment Apps Script lain, atur `VITE_GOOGLE_APPS_SCRIPT_URL` di `.env.local` untuk lokal dan di konfigurasi build/hosting sebelum build ulang. URL endpoint bukan kunci admin; jangan memasukkan kunci admin ke variabel frontend.
 
-Buka undangan dan klik ikon hati tersembunyi di footer untuk langsung masuk ke Admin Panel tanpa password aplikasi. Jika tab `Weddings` belum memiliki data, aplikasi menyalin data lokal perangkat tersebut ke spreadsheet saat pertama kali panel admin dibuka. Setelah mengubah source Apps Script, deploy ulang versi terbaru melalui **Deploy → Manage deployments → Edit** agar perubahan endpoint aktif.
+Bacaan snapshot database produksi diteruskan melalui endpoint `/api/wedding` di Vercel agar browser tidak perlu memanggil Google Apps Script lintas-domain. Perubahan ini aktif setelah deployment Vercel selesai. Saat pengembangan lokal, aplikasi tetap memakai JSONP langsung ke Apps Script.
+
+Buka URL undangan dengan `/#admin` untuk masuk ke Admin Panel tanpa password aplikasi. Jika tab `Weddings` belum memiliki data, aplikasi menyalin data lokal perangkat tersebut ke spreadsheet saat pertama kali panel admin dibuka. Setelah mengubah source Apps Script, deploy ulang versi terbaru melalui **Deploy → Manage deployments → Edit** agar perubahan endpoint aktif.
 
 Jika kode Apps Script berubah, buat **New version** di menu **Deploy → Manage deployments → Edit**, lalu deploy ulang. URL Web App yang sama dapat dipertahankan.
 
